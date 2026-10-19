@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador Web Multi-Página</title>
+  <title>Generador Web Multi-Página Responsive</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4f46e5">
@@ -19,14 +19,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.6); border-radius: 8px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
+  <!-- Banner PWA -->
   <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white px-4 py-3 shadow-lg border-b border-indigo-700/50 sticky top-0 z-40 transition-all duration-300">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-3 text-center sm:text-left">
@@ -37,8 +37,8 @@
         </div>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-        <button onclick="installPWA()" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 border border-indigo-300/35 cursor-pointer">
-          <i class="fa-solid fa-download text-xs"></i> Instalar WebApp
+        <button onclick="installPWA()" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 border border-indigo-300/35 cursor-pointer">
+          <i class="fa-solid fa-download text-xs"></i> Instalar
         </button>
         <button onclick="dismissInstallBanner()" class="text-indigo-200 hover:text-white p-2 rounded-lg text-xs transition cursor-pointer">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -47,127 +47,139 @@
     </div>
   </div>
 
-  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200">
-        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-      </div>
-      <div>
-        <h1 class="text-lg font-bold bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 bg-clip-text text-transparent leading-tight">Generador Web Multi-Página</h1>
-        <p class="text-xs text-slate-500 hidden sm:block">Crea webs estructuradas con varias secciones</p>
+  <!-- Header Responsivo -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+    <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200 shrink-0">
+          <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 bg-clip-text text-transparent leading-tight">Generador Web Multi-Página</h1>
+          <p class="text-[10px] text-slate-500">Diseño 100% Responsivo Móvil</p>
+        </div>
       </div>
     </div>
     
-    <div class="flex items-center gap-2">
-      <button onclick="document.getElementById('projectFileInput').click()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-        <i class="fa-solid fa-folder-open text-amber-500"></i> <span class="hidden md:inline">Abrir</span> Proyecto
+    <div class="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 w-full sm:w-auto">
+      <button onclick="document.getElementById('projectFileInput').click()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-folder-open text-amber-500"></i> <span>Abrir</span>
       </button>
       <input type="file" id="projectFileInput" accept=".json" class="hidden" onchange="importProject(event)">
 
-      <button onclick="exportProject()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/70 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-        <i class="fa-solid fa-floppy-disk text-indigo-600"></i> <span class="hidden md:inline">Guardar</span> Proyecto
+      <button onclick="exportProject()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/70 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-floppy-disk text-indigo-600"></i> <span>Guardar</span>
       </button>
 
-      <button onclick="downloadHtml()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-indigo-200 hover:shadow-md flex items-center gap-2 cursor-pointer">
-        <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Descargar</span> index.html
+      <button onclick="downloadHtml()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm hover:shadow-indigo-200 flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-download"></i> <span>Descargar</span>
       </button>
-      <button onclick="copyCode()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-2 cursor-pointer">
-        <i class="fa-regular fa-copy"></i> <span class="hidden sm:inline">Copiar</span>
+
+      <button onclick="copyCode()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-regular fa-copy"></i> <span>Copiar</span>
       </button>
     </div>
   </header>
 
-  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 sm:p-6 lg:p-8 max-w-[1700px] mx-auto w-full">
+  <!-- Contenido Principal Responsivo (Grid 1 columna en móvil, 12 columnas en escritorio) -->
+  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 p-3 sm:p-6 max-w-[1700px] mx-auto w-full">
     
-    <section class="lg:col-span-5 bg-white/90 backdrop-blur-xl rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col space-y-6">
-      <div class="border-b border-slate-100 pb-4">
-        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+    <!-- Panel Izquierdo de Configuración -->
+    <section class="lg:col-span-5 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col space-y-5">
+      <div class="border-b border-slate-100 pb-3">
+        <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
           <i class="fa-solid fa-sliders text-indigo-500"></i> Configuración del Sitio
         </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Título y gestión de secciones o páginas</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Título y gestión de secciones</p>
       </div>
 
+      <!-- Título -->
       <div>
-        <label for="siteTitle" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Título Principal</label>
+        <label for="siteTitle" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5">Título Principal</label>
         <input type="text" id="siteTitle" value="Centro Oficial de Descargas" 
-               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-slate-800 text-sm font-medium bg-slate-50/50">
+               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-slate-800 text-xs sm:text-sm font-medium bg-slate-50/50">
       </div>
 
-      <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/60 space-y-3">
+      <!-- Descripción General -->
+      <div class="bg-slate-50/80 rounded-2xl p-3.5 border border-slate-200/60 space-y-2.5">
         <div class="flex items-center justify-between">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-600">Descripción General</span>
-            <p class="text-[11px] text-slate-400">¿Deseas añadir un mensaje o explicación inicial?</p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600">Descripción General</span>
+            <p class="text-[10px] text-slate-400">¿Añadir mensaje inicial?</p>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="toggleDesc" checked class="sr-only peer" onchange="toggleSiteDescription()">
-            <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
           </label>
         </div>
         <div id="descContainer">
           <textarea id="siteDescription" rows="2" 
                     class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-slate-700 text-xs bg-white resize-none"
-                    placeholder="Escribe una pequeña descripción...">Portal con múltiples secciones de documentos y aplicaciones oficiales.</textarea>
+                    placeholder="Escribe una descripción...">Portal con múltiples secciones de documentos y aplicaciones oficiales.</textarea>
         </div>
       </div>
 
-      <div class="space-y-3 bg-indigo-50/30 p-4 rounded-2xl border border-indigo-100">
+      <!-- Páginas / Secciones -->
+      <div class="space-y-2.5 bg-indigo-50/30 p-3.5 rounded-2xl border border-indigo-100">
         <div class="flex items-center justify-between">
-          <label class="block text-xs font-bold uppercase tracking-wider text-indigo-900">Páginas / Secciones de la Web</label>
-          <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">Multi-página</span>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-indigo-900">Secciones de la Web</label>
+          <span class="text-[9px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">Multi-página</span>
         </div>
-        <p class="text-[11px] text-slate-500">Crea pestañas independientes. La portada mostrará los accesos a todas ellas.</p>
+        <p class="text-[11px] text-slate-500">Crea pestañas independientes para organizar tus archivos.</p>
         
         <div class="flex gap-2">
           <input type="text" id="newPageInput" placeholder="Ej: Documentación, Software..." 
                  class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium"
                  onkeypress="if(event.key === 'Enter') { addPage(); event.preventDefault(); }">
-          <button onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm cursor-pointer">
+          <button onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
             <i class="fa-solid fa-plus"></i> Añadir
           </button>
         </div>
 
-        <div class="space-y-1.5 pt-1">
-          <label class="block text-[10px] font-bold uppercase text-slate-400">Selecciona qué página estás editando:</label>
-          <div id="pagesTabsContainer" class="flex flex-wrap gap-1.5"></div>
+        <div class="space-y-1 pt-1">
+          <label class="block text-[10px] font-bold uppercase text-slate-400">Pestañas actuales:</label>
+          <div id="pagesTabsContainer" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto custom-scrollbar p-1"></div>
         </div>
       </div>
 
-      <div class="space-y-3">
+      <!-- Subida de Archivos -->
+      <div class="space-y-2">
         <div class="flex items-center justify-between">
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Subir Archivos para: <span id="activePageIndicator" class="text-indigo-600 font-extrabold underline">Documentos</span></label>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-600">Subir Archivos para: <span id="activePageIndicator" class="text-indigo-600 font-extrabold underline">Documentos</span></label>
         </div>
         
-        <div id="dropZone" class="border-2 border-dashed border-indigo-200 hover:border-indigo-400 rounded-2xl p-5 text-center transition cursor-pointer bg-indigo-50/20 hover:bg-indigo-50/50 group relative">
+        <div id="dropZone" class="border-2 border-dashed border-indigo-200 hover:border-indigo-400 rounded-2xl p-4 text-center transition cursor-pointer bg-indigo-50/20 hover:bg-indigo-50/50 group relative">
           <input type="file" id="fileInput" multiple class="hidden" onchange="handleFiles(this.files)">
-          <div class="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-1.5 group-hover:scale-110 transition duration-300">
-            <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+          <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-1 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
           </div>
           <p class="text-xs font-semibold text-slate-700">Arrastra archivos o <span class="text-indigo-600 underline">haz clic</span></p>
-          <p class="text-[10px] text-slate-400 mt-0.5">Se añadirán a la sección seleccionada</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">Se añadirán a la sección activa</p>
         </div>
       </div>
 
-      <div class="flex-1 flex flex-col space-y-3 min-h-[180px]">
+      <!-- Lista de Archivos -->
+      <div class="flex-1 flex flex-col space-y-2.5 min-h-[160px]">
         <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Archivos en esta sección (<span id="fileCount">0</span>)</h3>
+          <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Archivos (<span id="fileCount">0</span>)</h3>
           <button onclick="removeAllFilesActivePage()" id="clearBtn" class="text-xs text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar sección</button>
         </div>
-        <div id="fileList" class="space-y-3 flex-1 overflow-y-auto max-h-[280px] pr-1 custom-scrollbar"></div>
+        <div id="fileList" class="space-y-2.5 flex-1 overflow-y-auto max-h-[240px] pr-1 custom-scrollbar"></div>
       </div>
     </section>
 
-    <section class="lg:col-span-7 bg-white/90 backdrop-blur-xl rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+    <!-- Panel Derecho de Vista Previa Responsiva -->
+    <section class="lg:col-span-7 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
         <div>
-          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-eye text-emerald-500"></i> Vista Previa en Tiempo Real
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-eye text-emerald-500"></i> Vista Previa Responsiva
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Simulación interactiva de la estructura multi-página</p>
+          <p class="text-[11px] text-slate-400">Simulación interactiva multidispositivo</p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 justify-between sm:justify-end">
           <button onclick="previewNavigate('home')" class="text-[10px] font-bold uppercase px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full transition hover:bg-indigo-100 cursor-pointer">
-            <i class="fa-solid fa-house"></i> Ver Inicio
+            <i class="fa-solid fa-house"></i> Inicio
           </button>
           <span class="text-[10px] font-bold uppercase px-2.5 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 rounded-full flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> En Vivo
@@ -175,16 +187,16 @@
         </div>
       </div>
 
-      <div class="flex-1 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/10 to-purple-50/20 border border-slate-200/80 p-4 sm:p-8 flex flex-col justify-between overflow-y-auto max-h-[700px] custom-scrollbar shadow-inner">
-        <div id="previewContainer" class="space-y-8 max-w-2xl mx-auto w-full my-auto"></div>
-        <div class="text-center text-[11px] text-slate-400 border-t border-slate-200/50 pt-6 mt-12">
+      <div class="flex-1 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/10 to-purple-50/20 border border-slate-200/80 p-3 sm:p-6 flex flex-col justify-between overflow-y-auto max-h-[650px] custom-scrollbar shadow-inner">
+        <div id="previewContainer" class="space-y-6 max-w-2xl mx-auto w-full my-auto"></div>
+        <div class="text-center text-[10px] text-slate-400 border-t border-slate-200/50 pt-4 mt-8">
           &copy; 2026 by Jesús Flores
         </div>
       </div>
     </section>
   </main>
 
-  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2.5 z-50">
+  <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2.5 z-50">
     <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
     <span id="toastMessage">Operación realizada</span>
   </div>
@@ -225,7 +237,7 @@
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissInstallBanner(); });
       } else {
-        alert('Para instalar en tu dispositivo, usa el menú de opciones de tu navegador.');
+        alert('Para instalar en tu dispositivo, usa el menú del navegador.');
       }
     }
 
@@ -291,7 +303,7 @@
         alert('Debes mantener al menos una página en el sitio.');
         return;
       }
-      if (confirm('¿Eliminar la página "' + pageName + '" y todos sus archivos?')) {
+      if (confirm('¿Eliminar la página "' + pageName + '" y sus archivos?')) {
         delete pagesData[pageName];
         activePage = Object.keys(pagesData)[0];
         renderPagesTabs();
@@ -316,9 +328,9 @@
       Object.keys(pagesData).forEach(pageName => {
         const isActive = pageName === activePage;
         const activeClass = isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
-        html += '<div onclick="switchPage(\'' + pageName + '\')" class="cursor-pointer px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border ' + activeClass + '">' +
+        html += '<div onclick="switchPage(\'' + pageName + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
                 '<span>' + pageName + '</span>' +
-                '<span onclick="deletePage(\'' + pageName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-1"><i class="fa-solid fa-xmark text-[10px]"></i></span>' +
+                '<span onclick="deletePage(\'' + pageName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
                 '</div>';
       });
       container.innerHTML = html;
@@ -405,7 +417,7 @@
       clearBtn.classList.toggle('hidden', currentFiles.length === 0);
 
       if (currentFiles.length === 0) {
-        listEl.innerHTML = '<div class="text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">No hay archivos en "' + activePage + '".</div>';
+        listEl.innerHTML = '<div class="text-center py-5 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">No hay archivos en "' + activePage + '".</div>';
         return;
       }
 
@@ -414,12 +426,12 @@
         const iconInfo = getFileIcon(file.type);
         html += '<div class="p-3 bg-white border border-slate-200/80 rounded-2xl space-y-2 shadow-sm">' +
                 '<div class="flex items-center justify-between gap-2">' +
-                '<div class="flex items-center gap-2.5 min-w-0">' +
-                '<div class="w-8 h-8 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-sm"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                '<div class="flex items-center gap-2 min-w-0">' +
+                '<div class="w-7 h-7 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-xs"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
                 '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + file.name + '">' + file.name + '</p>' +
-                '<p class="text-[10px] text-slate-400 uppercase font-medium">' + file.type + ' • ' + file.size + '</p></div></div>' +
+                '<p class="text-[9px] text-slate-400 uppercase font-medium">' + file.type + ' • ' + file.size + '</p></div></div>' +
                 '<button onclick="removeFile(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
-                '<div><input type="text" value="' + (file.description || '') + '" oninput="updateFileDescription(' + idx + ', this.value)" placeholder="Explicación opcional para este archivo..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
+                '<div><input type="text" value="' + (file.description || '') + '" oninput="updateFileDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
       });
       listEl.innerHTML = html;
     }
@@ -446,18 +458,18 @@
         let navButtonsHTML = '';
         pageNames.forEach(pName => {
           const count = (pagesData[pName] || []).length;
-          navButtonsHTML += '<div onclick="previewNavigate(\'' + pName + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 cursor-pointer flex items-center justify-between">' +
-                            '<div class="flex items-center gap-4">' +
-                            '<div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-folder-open"></i></div>' +
-                            '<div><h3 class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition">' + pName + '</h3>' +
-                            '<p class="text-xs text-slate-400 mt-0.5">' + count + ' archivos disponibles</p></div></div>' +
-                            '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition"></i></div>';
+          navButtonsHTML += '<div onclick="previewNavigate(\'' + pName + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between">' +
+                            '<div class="flex items-center gap-3 min-w-0">' +
+                            '<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>' +
+                            '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">' + pName + '</h3>' +
+                            '<p class="text-[11px] text-slate-400">' + count + ' archivos disponibles</p></div></div>' +
+                            '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>';
         });
 
-        let descHTML = (showDesc && description) ? '<p class="text-xs text-slate-600 max-w-lg mx-auto leading-relaxed">' + description + '</p>' : '';
-        previewContainer.innerHTML = '<div class="space-y-6"><div class="text-center space-y-2"><h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">' + title + '</h1>' + descHTML + '</div>' +
-                                     '<div class="text-xs font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Selecciona una sección:</div>' +
-                                     '<div class="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">' + (pageNames.length > 0 ? navButtonsHTML : '<p class="text-center text-xs text-slate-400">No hay páginas creadas.</p>') + '</div></div>';
+        let descHTML = (showDesc && description) ? '<p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed px-2">' + description + '</p>' : '';
+        previewContainer.innerHTML = '<div class="space-y-4"><div class="text-center space-y-1.5"><h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight px-2">' + title + '</h1>' + descHTML + '</div>' +
+                                     '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div>' +
+                                     '<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + (pageNames.length > 0 ? navButtonsHTML : '<p class="text-center text-xs text-slate-400">No hay páginas creadas.</p>') + '</div></div>';
         return;
       }
 
@@ -468,20 +480,20 @@
         const displayName = cleanFileName(file.name);
         const hasDesc = file.description && file.description.trim() !== '';
 
-        cardsHTML += '<div class="group bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">' +
+        cardsHTML += '<div class="group bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm transition flex flex-col justify-between">' +
                      '<div class="space-y-2"><div class="flex items-center justify-between">' +
-                     '<div class="w-10 h-10 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center text-lg shadow-inner"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                     '<div class="w-9 h-9 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
                      '<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ' + iconInfo.bg + ' ' + iconInfo.color + ' border">.' + file.type + '</span></div>' +
-                     '<div><h4 class="font-bold text-slate-800 text-sm truncate" title="' + displayName + '">' + displayName + '</h4>' +
-                     (hasDesc ? '<p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-snug">' + file.description + '</p>' : '') + '</div></div>' +
-                     '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[11px] font-medium text-slate-400">' + file.size + '</span>' +
-                     '<span class="text-xs font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></div>';
+                     '<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="' + displayName + '">' + displayName + '</h4>' +
+                     (hasDesc ? '<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">' + file.description + '</p>' : '') + '</div></div>' +
+                     '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">' + file.size + '</span>' +
+                     '<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></div>';
       });
 
-      previewContainer.innerHTML = '<div class="space-y-6"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">' +
-                                   '<button onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</button>' +
-                                   '<span class="text-xs font-extrabold uppercase text-slate-700 bg-slate-100 px-3 py-1 rounded-full">' + previewActivePage + '</span></div>' +
-                                   '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' + (cardsHTML || '<div class="col-span-2 text-center py-8 text-xs text-slate-400">Esta sección no tiene archivos todavía.</div>') + '</div></div>';
+      previewContainer.innerHTML = '<div class="space-y-4"><div class="flex items-center justify-between border-b border-slate-200/60 pb-2.5">' +
+                                   '<button onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>' +
+                                   '<span class="text-[11px] font-extrabold uppercase text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full truncate max-w-[150px] sm:max-w-xs">' + previewActivePage + '</span></div>' +
+                                   '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + (cardsHTML || '<div class="col-span-2 text-center py-6 text-xs text-slate-400">Esta sección no tiene archivos.</div>') + '</div></div>';
     }
 
     function generateFullHTML() {
@@ -505,8 +517,8 @@
              '</head>\n' +
              '<body class="bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 min-h-screen text-slate-800 flex flex-col justify-between">\n\n' +
              '  <script id="site-data" type="text/plain">' + encodedData + '<\/script>\n\n' +
-             '  <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full space-y-10" id="appRoot"></div>\n\n' +
-             '  <footer class="py-6 border-t border-slate-200/60 text-center text-xs text-slate-400">\n' +
+             '  <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full space-y-8" id="appRoot"></div>\n\n' +
+             '  <footer class="py-6 border-t border-slate-200/60 text-center text-xs text-slate-400 px-4">\n' +
              '    <p>&copy; 2026 by Jesús Flores</p>\n' +
              '  </footer>\n\n' +
              '  <script>\n' +
@@ -545,17 +557,17 @@
              '        let buttonsHTML = "";\n' +
              '        pageNames.forEach(pName => {\n' +
              '          const count = (data.pages[pName] || []).length;\n' +
-             '          buttonsHTML += \'<div onclick="currentView="\' + pName + \'"; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
-             '                         \'<div class="flex items-center gap-4">\' +\n' +
-             '                         \'<div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
-             '                         \'<div><h3 class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition">\' + pName + \'</h3>\' +\n' +
-             '                         \'<p class="text-xs text-slate-400 mt-0.5">\' + count + \' archivos disponibles</p></div></div>\' +\n' +
-             '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition"></i></div>\';\n' +
+             '          buttonsHTML += \'<div onclick="currentView="\' + pName + \'"; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '                         \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
+             '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
+             '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">\' + pName + \'</h3>\' +\n' +
+             '                         \'<p class="text-[11px] text-slate-400">\' + count + \' archivos disponibles</p></div></div>\' +\n' +
+             '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>\';\n' +
              '        });\n' +
-             '        let descHTML = (data.showDesc && data.description) ? \'<p class="text-base text-slate-600 leading-relaxed">\' + data.description + \'</p>\' : "";\n' +
-             '        root.innerHTML = \'<div class="text-center space-y-3 max-w-2xl mx-auto"><h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">\' + data.title + \'</h1>\' + descHTML + \'</div>\' +\n' +
-             '                         \'<div class="text-xs font-bold uppercase tracking-wider text-slate-400 text-center pt-4">Secciones Disponibles:</div>\' +\n' +
-             '                         \'<div class="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
+             '        let descHTML = (data.showDesc && data.description) ? \'<p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto px-2">\' + data.description + \'</p>\' : "";\n' +
+             '        root.innerHTML = \'<div class="text-center space-y-2.5 max-w-2xl mx-auto"><h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight px-2">\' + data.title + \'</h1>\' + descHTML + \'</div>\' +\n' +
+             '                         \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div>\' +\n' +
+             '                         \'<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
              '      } else {\n' +
              '        const files = data.pages[currentView] || [];\n' +
              '        let cardsHTML = "";\n' +
@@ -563,19 +575,19 @@
              '          const iconInfo = getFileIcon(file.type);\n' +
              '          const displayName = cleanFileName(file.name);\n' +
              '          const hasDesc = file.description && file.description.trim() !== "";\n' +
-             '          cardsHTML += \'<a href="\' + file.name + \'" download="\' + file.name + \'" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
-             '                         \'<div class="space-y-3"><div class="flex items-center justify-between">\' +\n' +
-             '                         \'<div class="w-12 h-12 rounded-2xl \' + iconInfo.bg + \' \' + iconInfo.color + \' border flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition"><i class="fa-solid \' + iconInfo.icon + \'"></i></div>\' +\n' +
-             '                         \'<span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full \' + iconInfo.bg + \' \' + iconInfo.color + \' border">.\' + file.type + \'</span></div>\' +\n' +
-             '                         \'<div><h3 class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition truncate" title="\' + displayName + \'">\' + displayName + \'</h3>\' +\n' +
-             '                         (hasDesc ? \'<p class="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">\' + file.description + \'</p>\' : "") + \'</div></div>\' +\n' +
-             '                         \'<div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-medium text-slate-400">\' + file.size + \'</span>\' +\n' +
-             '                         \'<span class="text-xs font-bold text-indigo-600 flex items-center gap-1.5 group-hover:translate-x-1 transition">Descargar <i class="fa-solid fa-arrow-down text-[10px]"></i></span></div></a>\';\n' +
+             '          cardsHTML += \'<a href="\' + file.name + \'" download="\' + file.name + \'" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
+             '                         \'<div class="space-y-2"><div class="flex items-center justify-between">\' +\n' +
+             '                         \'<div class="w-9 h-9 rounded-xl \' + iconInfo.bg + \' \' + iconInfo.color + \' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid \' + iconInfo.icon + \'"></i></div>\' +\n' +
+             '                         \'<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full \' + iconInfo.bg + \' \' + iconInfo.color + \' border">.\' + file.type + \'</span></div>\' +\n' +
+             '                         \'<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="\' + displayName + \'">\' + displayName + \'</h4>\' +\n' +
+             '                         (hasDesc ? \'<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">\' + file.description + \'</p>\' : "") + \'</div></div>\' +\n' +
+             '                         \'<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">\' + file.size + \'</span>\' +\n' +
+             '                         \'<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></a>\';\n' +
              '        });\n' +
-             '        root.innerHTML = \'<div class="space-y-6 max-w-5xl mx-auto"><div class="flex items-center justify-between border-b border-slate-200/60 pb-4">\' +\n' +
-             '                         \'<button onclick="currentView="home"; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</button>\' +\n' +
-             '                         \'<h1 class="text-2xl font-extrabold text-slate-900">\' + currentView + \'</h1></div>\' +\n' +
-             '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-16 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
+             '        root.innerHTML = \'<div class="space-y-4 max-w-5xl mx-auto px-2"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">\' +\n' +
+             '                         \'<button onclick="currentView="home"; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
+             '                         \'<h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 truncate max-w-[200px] sm:max-w-md">\' + currentView + \'</h1></div>\' +\n' +
+             '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
              '      }\n' +
              '    }\n' +
              '    render();\n' +
@@ -595,7 +607,7 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('¡index.html multi-página descargado!');
+      showToast('¡index.html responsivo descargado!');
     }
 
     function copyCode() {
@@ -622,7 +634,7 @@
 
     function exportProject() {
       const projectData = {
-        version: "2.0",
+        version: "2.5",
         date: new Date().toISOString(),
         siteTitle: document.getElementById('siteTitle').value,
         showDescription: document.getElementById('toggleDesc').checked,
