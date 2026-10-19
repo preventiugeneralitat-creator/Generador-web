@@ -224,7 +224,6 @@
     });
 
     function showInstallBanner() {
-      // Si ya está en modo standalone/instalado, no mostramos
       if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
         return;
       }
@@ -245,7 +244,6 @@
           dismissInstallBanner();
         });
       } else {
-        // Fallback para navegadores que no lanzan el prompt directo (iOS Safari / Chromium)
         alert('Para instalar en iOS Safari: Toca el botón "Compartir" y selecciona "Añadir a la pantalla de inicio".\nEn ordenador: Haz clic en el icono de instalar en la barra de navegación.');
       }
     }
@@ -328,21 +326,17 @@
     function handleFiles(files) {
       Array.from(files).forEach(file => {
         const ext = file.name.split('.').pop().toLowerCase();
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-          filesList.push({
-            name: file.name,
-            size: formatBytes(file.size),
-            type: ext,
-            dataUrl: e.target.result,
-            description: ''
-          });
-          renderFileList();
-          updatePreview();
-        };
-
-        reader.readAsDataURL(file);
+        
+        // Asignamos el nombre del archivo para la descarga directamente
+        filesList.push({
+          name: file.name,
+          size: formatBytes(file.size),
+          type: ext,
+          dataUrl: file.name, // Nombre de archivo local relativo
+          description: ''
+        });
+        renderFileList();
+        updatePreview();
       });
     }
 
@@ -489,7 +483,7 @@
         const hasDesc = file.description && file.description.trim() !== '';
 
         return `
-        <a href="${file.dataUrl}" download="${file.name}" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
+        <a href="${file.name}" download="${file.name}" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <div class="w-12 h-12 rounded-2xl ${iconInfo.bg} ${iconInfo.color} border flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition duration-300">
@@ -665,15 +659,23 @@
       }, 3000);
     }
 
-    // Funciones de gestión del Proyecto (Guardar/Cargar configuración JSON)
+    // Funciones de gestión del Proyecto (Guardar/Cargar configuración JSON ligera)
     function exportProject() {
+      // Creamos una lista limpia sin datos pesados codificados en base64
+      const cleanFiles = filesList.map(f => ({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        description: f.description || ''
+      }));
+
       const projectData = {
         version: "1.0",
         date: new Date().toISOString(),
         siteTitle: document.getElementById('siteTitle').value,
         showDescription: document.getElementById('toggleDesc').checked,
         siteDescription: document.getElementById('siteDescription').value,
-        files: filesList
+        files: cleanFiles
       };
 
       const jsonStr = JSON.stringify(projectData, null, 2);
@@ -709,7 +711,13 @@
             document.getElementById('siteDescription').value = data.siteDescription;
           }
           if (Array.isArray(data.files)) {
-            filesList = data.files;
+            filesList = data.files.map(f => ({
+              name: f.name,
+              size: f.size || '0 KB',
+              type: f.type || 'file',
+              dataUrl: f.name,
+              description: f.description || ''
+            }));
           }
 
           renderFileList();
@@ -720,7 +728,6 @@
         }
       };
       reader.readAsText(file);
-      // Reset input para permitir subir el mismo archivo de nuevo si se desea
       event.target.value = '';
     }
   </script>
