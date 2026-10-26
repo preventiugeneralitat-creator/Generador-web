@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador Web Multi-Página Responsive</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Generador Web">
+  <link rel="apple-touch-icon" href="ico.png">
+  <link rel="icon" type="image/png" href="ico.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.6); border-radius: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Banner PWA -->
+  <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white px-4 py-3 shadow-lg border-b border-indigo-700/50 sticky top-0 z-40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3 text-center sm:text-left">
+        <img src="ico.png" alt="Icono App" class="w-9 h-9 rounded-xl shadow-md border border-white/20 bg-white object-cover shrink-0" onerror="this.src='https://placehold.co/100x100/4f46e5/ffffff?text=GW'">
+        <div>
+          <p class="text-xs sm:text-sm font-bold leading-tight">Instala "Generador Web" en tu dispositivo</p>
+          <p class="text-[11px] text-indigo-200">Accede más rápido como una aplicación nativa.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <button onclick="installPWA()" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 border border-indigo-300/35 cursor-pointer">
+          <i class="fa-solid fa-download text-xs"></i> Instalar
+        </button>
+        <button onclick="dismissInstallBanner()" class="text-indigo-200 hover:text-white p-2 rounded-lg text-xs transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Responsivo -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+    <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200 shrink-0">
+          <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 bg-clip-text text-transparent leading-tight">Generador Web Multi-Página</h1>
+          <p class="text-[10px] text-slate-500">Diseño 100% Responsivo Móvil</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 w-full sm:w-auto">
+      <button onclick="document.getElementById('projectFileInput').click()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-folder-open text-amber-500"></i> <span>Abrir</span>
+      </button>
+      <input type="file" id="projectFileInput" accept=".json" class="hidden" onchange="importProject(event)">
+
+      <button onclick="exportProject()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/70 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-floppy-disk text-indigo-600"></i> <span>Guardar</span>
+      </button>
+
+      <button onclick="downloadHtml()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm hover:shadow-indigo-200 flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-download"></i> <span>Descargar</span>
+      </button>
+
+      <button onclick="copyCode()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-regular fa-copy"></i> <span>Copiar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido Principal Responsivo (Grid 1 columna en móvil, 12 columnas en escritorio) -->
+  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 p-3 sm:p-6 max-w-[1700px] mx-auto w-full">
+    
+    <!-- Panel Izquierdo de Configuración -->
+    <section class="lg:col-span-5 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col space-y-5">
+      <div class="border-b border-slate-100 pb-3">
+        <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-indigo-500"></i> Configuración del Sitio
+        </h2>
+        <p class="text-[11px] text-slate-400 mt-0.5">Título y gestión de secciones</p>
+      </div>
+
+      <!-- Título -->
+      <div>
+        <label for="siteTitle" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5">Título Principal</label>
+        <input type="text" id="siteTitle" value="Centro Oficial de Descargas" 
+               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-slate-800 text-xs sm:text-sm font-medium bg-slate-50/50">
+      </div>
+
+      <!-- Descripción General -->
+      <div class="bg-slate-50/80 rounded-2xl p-3.5 border border-slate-200/60 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600">Descripción General</span>
+            <p class="text-[10px] text-slate-400">¿Añadir mensaje inicial?</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="toggleDesc" checked class="sr-only peer" onchange="toggleSiteDescription()">
+            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+        <div id="descContainer">
+          <textarea id="siteDescription" rows="2" 
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-slate-700 text-xs bg-white resize-none"
+                    placeholder="Escribe una descripción...">Portal con múltiples secciones de documentos y aplicaciones oficiales.</textarea>
+        </div>
+      </div>
+
+      <!-- Páginas / Secciones -->
+      <div class="space-y-2.5 bg-indigo-50/30 p-3.5 rounded-2xl border border-indigo-100">
+        <div class="flex items-center justify-between">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-indigo-900">Secciones de la Web</label>
+          <span class="text-[9px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">Multi-página</span>
+        </div>
+        <p class="text-[11px] text-slate-500">Crea pestañas independientes para organizar tus archivos.</p>
+        
+        <div class="flex gap-2">
+          <input type="text" id="newPageInput" placeholder="Ej: Documentación, Software..." 
+                 class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium"
+                 onkeypress="if(event.key === 'Enter') { addPage(); event.preventDefault(); }">
+          <button onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
+            <i class="fa-solid fa-plus"></i> Añadir
+          </button>
+        </div>
+
+        <div class="space-y-1 pt-1">
+          <label class="block text-[10px] font-bold uppercase text-slate-400">Pestañas actuales:</label>
+          <div id="pagesTabsContainer" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto custom-scrollbar p-1"></div>
+        </div>
+      </div>
+
+      <!-- Subida de Archivos -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-600">Subir Archivos para: <span id="activePageIndicator" class="text-indigo-600 font-extrabold underline">Documentos</span></label>
+        </div>
+        
+        <div id="dropZone" class="border-2 border-dashed border-indigo-200 hover:border-indigo-400 rounded-2xl p-4 text-center transition cursor-pointer bg-indigo-50/20 hover:bg-indigo-50/50 group relative">
+          <input type="file" id="fileInput" multiple class="hidden" onchange="handleFiles(this.files)">
+          <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-1 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+          </div>
+          <p class="text-xs font-semibold text-slate-700">Arrastra archivos o <span class="text-indigo-600 underline">haz clic</span></p>
+          <p class="text-[10px] text-slate-400 mt-0.5">Se añadirán a la sección activa</p>
+        </div>
+      </div>
+
+      <!-- Lista de Archivos -->
+      <div class="flex-1 flex flex-col space-y-2.5 min-h-[160px]">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Archivos (<span id="fileCount">0</span>)</h3>
+          <button onclick="removeAllFilesActivePage()" id="clearBtn" class="text-xs text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar sección</button>
+        </div>
+        <div id="fileList" class="space-y-2.5 flex-1 overflow-y-auto max-h-[240px] pr-1 custom-scrollbar"></div>
+      </div>
+    </section>
+
+    <!-- Panel Derecho de Vista Previa Responsiva -->
+    <section class="lg:col-span-7 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-eye text-emerald-500"></i> Vista Previa Responsiva
+          </h2>
+          <p class="text-[11px] text-slate-400">Simulación interactiva multidispositivo</p>
+        </div>
+        <div class="flex items-center gap-2 justify-between sm:justify-end">
+          <button onclick="previewNavigate('home')" class="text-[10px] font-bold uppercase px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full transition hover:bg-indigo-100 cursor-pointer">
+            <i class="fa-solid fa-house"></i> Inicio
+          </button>
+          <span class="text-[10px] font-bold uppercase px-2.5 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 rounded-full flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> En Vivo
+          </span>
+        </div>
+      </div>
+
+      <div class="flex-1 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/10 to-purple-50/20 border border-slate-200/80 p-3 sm:p-6 flex flex-col justify-between overflow-y-auto max-h-[650px] custom-scrollbar shadow-inner">
+        <div id="previewContainer" class="space-y-6 max-w-2xl mx-auto w-full my-auto"></div>
+        <div class="text-center text-[10px] text-slate-400 border-t border-slate-200/50 pt-4 mt-8">
+          &copy; 2026 by Jesús Flores
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2.5 z-50">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+    <span id="toastMessage">Operación realizada</span>
+  </div>
+
+  <script>
+    let pagesData = {
+      "Documentos": [
+        { name: "Manual_Usuario.pdf", size: "2.1 MB", type: "pdf", description: "Guía de referencia rápida oficial." }
+      ],
+      "Software": [
+        { name: "Instalador_App.exe", size: "14.5 MB", type: "exe", description: "Ejecutable principal del sistema." }
+      ]
+    };
+    let activePage = "Documentos";
+    let previewActivePage = "home";
+    let deferredPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error', err));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallBanner();
+    });
+
+    function showInstallBanner() {
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) return;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner && !sessionStorage.getItem('pwaBannerDismissed')) banner.classList.remove('hidden');
+    }
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissInstallBanner(); });
+      } else {
+        alert('Para instalar en tu dispositivo, usa el menú del navegador.');
+      }
+    }
+
+    function dismissInstallBanner() {
+      document.getElementById('pwaInstallBanner').classList.add('hidden');
+      sessionStorage.setItem('pwaBannerDismissed', 'true');
+    }
+
+    window.onload = () => {
+      const keys = Object.keys(pagesData);
+      if (keys.length > 0) activePage = keys[0];
+
+      setupDragAndDrop();
+      renderPagesTabs();
+      renderFileList();
+      updatePreview();
+
+      document.getElementById('siteTitle').addEventListener('input', updatePreview);
+      document.getElementById('siteDescription').addEventListener('input', updatePreview);
+    };
+
+    function setupDragAndDrop() {
+      const dropZone = document.getElementById('dropZone');
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
+        dropZone.addEventListener(eName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+      });
+      ['dragenter', 'dragover'].forEach(eName => {
+        dropZone.addEventListener(eName, () => dropZone.classList.add('border-indigo-500', 'bg-indigo-50/70'), false);
+      });
+      ['dragleave', 'drop'].forEach(eName => {
+        dropZone.addEventListener(eName, () => dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/70'), false);
+      });
+      dropZone.addEventListener('drop', (e) => {
+        handleFiles(e.dataTransfer.files);
+      });
+      dropZone.addEventListener('click', () => {
+        document.getElementById('fileInput').click();
+      });
+    }
+
+    function addPage() {
+      const input = document.getElementById('newPageInput');
+      const pageName = input.value.trim();
+      if (!pageName) return;
+
+      if (pagesData[pageName]) {
+        alert('Esa página ya existe.');
+        return;
+      }
+
+      pagesData[pageName] = [];
+      activePage = pageName;
+      input.value = '';
+      renderPagesTabs();
+      renderFileList();
+      updatePreview();
+      showToast('Página "' + pageName + '" creada');
+    }
+
+    function deletePage(pageName, event) {
+      event.stopPropagation();
+      if (Object.keys(pagesData).length <= 1) {
+        alert('Debes mantener al menos una página en el sitio.');
+        return;
+      }
+      if (confirm('¿Eliminar la página "' + pageName + '" y sus archivos?')) {
+        delete pagesData[pageName];
+        activePage = Object.keys(pagesData)[0];
+        renderPagesTabs();
+        renderFileList();
+        updatePreview();
+        showToast('Página eliminada');
+      }
+    }
+
+    function switchPage(pageName) {
+      activePage = pageName;
+      renderPagesTabs();
+      renderFileList();
+    }
+
+    function renderPagesTabs() {
+      const container = document.getElementById('pagesTabsContainer');
+      const indicator = document.getElementById('activePageIndicator');
+      indicator.textContent = activePage;
+
+      let html = '';
+      Object.keys(pagesData).forEach(pageName => {
+        const isActive = pageName === activePage;
+        const activeClass = isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+        html += '<div onclick="switchPage(\'' + pageName + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
+                '<span>' + pageName + '</span>' +
+                '<span onclick="deletePage(\'' + pageName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
+                '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function handleFiles(files) {
+      if (!pagesData[activePage]) pagesData[activePage] = [];
+      Array.from(files).forEach(file => {
+        const ext = file.name.split('.').pop().toLowerCase();
+        pagesData[activePage].push({
+          name: file.name,
+          size: formatBytes(file.size),
+          type: ext,
+          description: ''
+        });
+      });
+      renderFileList();
+      updatePreview();
+      showToast('Archivos añadidos a ' + activePage);
+    }
+
+    function formatBytes(bytes, decimals = 1) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function removeFile(index) {
+      pagesData[activePage].splice(index, 1);
+      renderFileList();
+      updatePreview();
+    }
+
+    function removeAllFilesActivePage() {
+      if (confirm('¿Vaciar la sección "' + activePage + '"?')) {
+        pagesData[activePage] = [];
+        renderFileList();
+        updatePreview();
+      }
+    }
+
+    function updateFileDescription(index, text) {
+      pagesData[activePage][index].description = text;
+      updatePreview();
+    }
+
+    function getFileIcon(ext) {
+      switch(ext) {
+        case 'pdf': return { icon: 'fa-file-pdf', color: 'text-rose-500', bg: 'bg-rose-50 border-rose-100' };
+        case 'doc':
+        case 'docx': return { icon: 'fa-file-word', color: 'text-blue-500', bg: 'bg-blue-50 border-blue-100' };
+        case 'xls':
+        case 'xlsx': return { icon: 'fa-file-excel', color: 'text-emerald-500', bg: 'bg-emerald-50 border-emerald-100' };
+        case 'ppt':
+        case 'pptx': return { icon: 'fa-file-powerpoint', color: 'text-orange-500', bg: 'bg-orange-50 border-orange-100' };
+        case 'zip':
+        case 'rar':
+        case '7z': return { icon: 'fa-file-zipper', color: 'text-amber-500', bg: 'bg-amber-50 border-amber-100' };
+        case 'exe':
+        case 'msi': return { icon: 'fa-file-code', color: 'text-purple-500', bg: 'bg-purple-50 border-purple-100' };
+        case 'bat':
+        case 'sh':
+        case 'cmd': return { icon: 'fa-terminal', color: 'text-slate-800', bg: 'bg-slate-100 border-slate-200' };
+        default: return { icon: 'fa-file', color: 'text-slate-500', bg: 'bg-slate-50 border-slate-200' };
+      }
+    }
+
+    function cleanFileName(filename) {
+      const lastDot = filename.lastIndexOf('.');
+      if (lastDot === -1 || lastDot === 0) return filename;
+      return filename.substring(0, lastDot);
+    }
+
+    function renderFileList() {
+      const listEl = document.getElementById('fileList');
+      const countEl = document.getElementById('fileCount');
+      const clearBtn = document.getElementById('clearBtn');
+      const currentFiles = pagesData[activePage] || [];
+
+      countEl.textContent = currentFiles.length;
+      clearBtn.classList.toggle('hidden', currentFiles.length === 0);
+
+      if (currentFiles.length === 0) {
+        listEl.innerHTML = '<div class="text-center py-5 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">No hay archivos en "' + activePage + '".</div>';
+        return;
+      }
+
+      let html = '';
+      currentFiles.forEach((file, idx) => {
+        const iconInfo = getFileIcon(file.type);
+        html += '<div class="p-3 bg-white border border-slate-200/80 rounded-2xl space-y-2 shadow-sm">' +
+                '<div class="flex items-center justify-between gap-2">' +
+                '<div class="flex items-center gap-2 min-w-0">' +
+                '<div class="w-7 h-7 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-xs"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + file.name + '">' + file.name + '</p>' +
+                '<p class="text-[9px] text-slate-400 uppercase font-medium">' + file.type + ' • ' + file.size + '</p></div></div>' +
+                '<button onclick="removeFile(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
+                '<div><input type="text" value="' + (file.description || '') + '" oninput="updateFileDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
+      });
+      listEl.innerHTML = html;
+    }
+
+    function toggleSiteDescription() {
+      const isChecked = document.getElementById('toggleDesc').checked;
+      document.getElementById('descContainer').classList.toggle('hidden', !isChecked);
+      updatePreview();
+    }
+
+    function previewNavigate(page) {
+      previewActivePage = page;
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const previewContainer = document.getElementById('previewContainer');
+      const title = document.getElementById('siteTitle').value || 'Centro de Descargas';
+      const showDesc = document.getElementById('toggleDesc').checked;
+      const description = document.getElementById('siteDescription').value;
+      const pageNames = Object.keys(pagesData);
+
+      if (previewActivePage === 'home') {
+        let navButtonsHTML = '';
+        pageNames.forEach(pName => {
+          const count = (pagesData[pName] || []).length;
+          navButtonsHTML += '<div onclick="previewNavigate(\'' + pName + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between">' +
+                            '<div class="flex items-center gap-3 min-w-0">' +
+                            '<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>' +
+                            '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">' + pName + '</h3>' +
+                            '<p class="text-[11px] text-slate-400">' + count + ' archivos disponibles</p></div></div>' +
+                            '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>';
+        });
+
+        let descHTML = (showDesc && description) ? '<p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed px-2">' + description + '</p>' : '';
+        previewContainer.innerHTML = '<div class="space-y-4"><div class="text-center space-y-1.5"><h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight px-2">' + title + '</h1>' + descHTML + '</div>' +
+                                     '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div>' +
+                                     '<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + (pageNames.length > 0 ? navButtonsHTML : '<p class="text-center text-xs text-slate-400">No hay páginas creadas.</p>') + '</div></div>';
+        return;
+      }
+
+      const currentFiles = pagesData[previewActivePage] || [];
+      let cardsHTML = '';
+      currentFiles.forEach(file => {
+        const iconInfo = getFileIcon(file.type);
+        const displayName = cleanFileName(file.name);
+        const hasDesc = file.description && file.description.trim() !== '';
+
+        cardsHTML += '<div class="group bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm transition flex flex-col justify-between">' +
+                     '<div class="space-y-2"><div class="flex items-center justify-between">' +
+                     '<div class="w-9 h-9 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                     '<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ' + iconInfo.bg + ' ' + iconInfo.color + ' border">.' + file.type + '</span></div>' +
+                     '<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="' + displayName + '">' + displayName + '</h4>' +
+                     (hasDesc ? '<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">' + file.description + '</p>' : '') + '</div></div>' +
+                     '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">' + file.size + '</span>' +
+                     '<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></div>';
+      });
+
+      previewContainer.innerHTML = '<div class="space-y-4"><div class="flex items-center justify-between border-b border-slate-200/60 pb-2.5">' +
+                                   '<button onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>' +
+                                   '<span class="text-[11px] font-extrabold uppercase text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full truncate max-w-[150px] sm:max-w-xs">' + previewActivePage + '</span></div>' +
+                                   '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + (cardsHTML || '<div class="col-span-2 text-center py-6 text-xs text-slate-400">Esta sección no tiene archivos.</div>') + '</div></div>';
+    }
+
+    function generateFullHTML() {
+      const title = document.getElementById('siteTitle').value || 'Centro de Descargas';
+      const showDesc = document.getElementById('toggleDesc').checked;
+      const description = document.getElementById('siteDescription').value;
+      
+      const packageData = { title: title, showDesc: showDesc, description: description, pages: pagesData };
+      const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(packageData))));
+
+      return '<!DOCTYPE html>\n' +
+             '<html lang="es">\n' +
+             '<head>\n' +
+             '  <meta charset="UTF-8">\n' +
+             '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+             '  <title>' + title + '</title>\n' +
+             '  <script src="https://cdn.tailwindcss.com"><\/script>\n' +
+             '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">\n' +
+             '  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n' +
+             '  <style> body { font-family: "Inter", sans-serif; } </style>\n' +
+             '</head>\n' +
+             '<body class="bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 min-h-screen text-slate-800 flex flex-col justify-between">\n\n' +
+             '  <script id="site-data" type="text/plain">' + encodedData + '<\/script>\n\n' +
+             '  <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full space-y-8" id="appRoot"></div>\n\n' +
+             '  <footer class="py-6 border-t border-slate-200/60 text-center text-xs text-slate-400 px-4">\n' +
+             '    <p>&copy; 2026 by Jesús Flores</p>\n' +
+             '  </footer>\n\n' +
+             '  <script>\n' +
+             '    const encoded = document.getElementById("site-data").textContent.trim();\n' +
+             '    const data = JSON.parse(decodeURIComponent(escape(atob(encoded))));\n' +
+             '    let currentView = "home";\n\n' +
+             '    function cleanFileName(filename) {\n' +
+             '      const lastDot = filename.lastIndexOf(".");\n' +
+             '      if (lastDot === -1 || lastDot === 0) return filename;\n' +
+             '      return filename.substring(0, lastDot);\n' +
+             '    }\n\n' +
+             '    function getFileIcon(ext) {\n' +
+             '      switch(ext) {\n' +
+             '        case "pdf": return { icon: "fa-file-pdf", color: "text-rose-500", bg: "bg-rose-50 border-rose-100" };\n' +
+             '        case "doc":\n' +
+             '        case "docx": return { icon: "fa-file-word", color: "text-blue-500", bg: "bg-blue-50 border-blue-100" };\n' +
+             '        case "xls":\n' +
+             '        case "xlsx": return { icon: "fa-file-excel", color: "text-emerald-500", bg: "bg-emerald-50 border-emerald-100" };\n' +
+             '        case "ppt":\n' +
+             '        case "pptx": return { icon: "fa-file-powerpoint", color: "text-orange-500", bg: "bg-orange-50 border-orange-100" };\n' +
+             '        case "zip":\n' +
+             '        case "rar":\n' +
+             '        case "7z": return { icon: "fa-file-zipper", color: "text-amber-500", bg: "bg-amber-50 border-amber-100" };\n' +
+             '        case "exe":\n' +
+             '        case "msi": return { icon: "fa-file-code", color: "text-purple-500", bg: "bg-purple-50 border-purple-100" };\n' +
+             '        case "bat":\n' +
+             '        case "sh":\n' +
+             '        case "cmd": return { icon: "fa-terminal", color: "text-slate-800", bg: "bg-slate-100 border-slate-200" };\n' +
+             '        default: return { icon: "fa-file", color: "text-slate-500", bg: "bg-slate-50 border-slate-200" };\n' +
+             '      }\n' +
+             '    }\n\n' +
+             '    function render() {\n' +
+             '      const root = document.getElementById("appRoot");\n' +
+             '      const pageNames = Object.keys(data.pages || {});\n\n' +
+             '      if (currentView === "home") {\n' +
+             '        let buttonsHTML = "";\n' +
+             '        pageNames.forEach(pName => {\n' +
+             '          const count = (data.pages[pName] || []).length;\n' +
+             '          buttonsHTML += \'<div onclick="currentView="\' + pName + \'"; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '                         \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
+             '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
+             '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">\' + pName + \'</h3>\' +\n' +
+             '                         \'<p class="text-[11px] text-slate-400">\' + count + \' archivos disponibles</p></div></div>\' +\n' +
+             '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>\';\n' +
+             '        });\n' +
+             '        let descHTML = (data.showDesc && data.description) ? \'<p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto px-2">\' + data.description + \'</p>\' : "";\n' +
+             '        root.innerHTML = \'<div class="text-center space-y-2.5 max-w-2xl mx-auto"><h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight px-2">\' + data.title + \'</h1>\' + descHTML + \'</div>\' +\n' +
+             '                         \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div>\' +\n' +
+             '                         \'<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
+             '      } else {\n' +
+             '        const files = data.pages[currentView] || [];\n' +
+             '        let cardsHTML = "";\n' +
+             '        files.forEach(file => {\n' +
+             '          const iconInfo = getFileIcon(file.type);\n' +
+             '          const displayName = cleanFileName(file.name);\n' +
+             '          const hasDesc = file.description && file.description.trim() !== "";\n' +
+             '          cardsHTML += \'<a href="\' + file.name + \'" download="\' + file.name + \'" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
+             '                         \'<div class="space-y-2"><div class="flex items-center justify-between">\' +\n' +
+             '                         \'<div class="w-9 h-9 rounded-xl \' + iconInfo.bg + \' \' + iconInfo.color + \' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid \' + iconInfo.icon + \'"></i></div>\' +\n' +
+             '                         \'<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full \' + iconInfo.bg + \' \' + iconInfo.color + \' border">.\' + file.type + \'</span></div>\' +\n' +
+             '                         \'<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="\' + displayName + \'">\' + displayName + \'</h4>\' +\n' +
+             '                         (hasDesc ? \'<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">\' + file.description + \'</p>\' : "") + \'</div></div>\' +\n' +
+             '                         \'<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">\' + file.size + \'</span>\' +\n' +
+             '                         \'<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></a>\';\n' +
+             '        });\n' +
+             '        root.innerHTML = \'<div class="space-y-4 max-w-5xl mx-auto px-2"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">\' +\n' +
+             '                         \'<button onclick="currentView="home"; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
+             '                         \'<h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 truncate max-w-[200px] sm:max-w-md">\' + currentView + \'</h1></div>\' +\n' +
+             '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
+             '      }\n' +
+             '    }\n' +
+             '    render();\n' +
+             '  <\/script>\n' +
+             '</body>\n' +
+             '</html>';
+    }
+
+    function downloadHtml() {
+      const htmlContent = generateFullHTML();
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('¡index.html responsivo descargado!');
+    }
+
+    function copyCode() {
+      const htmlContent = generateFullHTML();
+      const textarea = document.createElement('textarea');
+      textarea.value = htmlContent;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('¡Código copiado al portapapeles!');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    function exportProject() {
+      const projectData = {
+        version: "2.5",
+        date: new Date().toISOString(),
+        siteTitle: document.getElementById('siteTitle').value,
+        showDescription: document.getElementById('toggleDesc').checked,
+        siteDescription: document.getElementById('siteDescription').value,
+        pages: pagesData
+      };
+      const jsonStr = JSON.stringify(projectData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'config_proyecto_multipagina.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('¡Proyecto guardado!');
+    }
+
+    function importProject(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.siteTitle) document.getElementById('siteTitle').value = data.siteTitle;
+          if (data.showDescription !== undefined) {
+            document.getElementById('toggleDesc').checked = data.showDescription;
+            toggleSiteDescription();
+          }
+          if (data.siteDescription) document.getElementById('siteDescription').value = data.siteDescription;
+          if (data.pages) {
+            pagesData = data.pages;
+            activePage = Object.keys(pagesData)[0] || 'Inicio';
+          }
+          renderPagesTabs();
+          renderFileList();
+          updatePreview();
+          showToast('¡Proyecto multi-página cargado!');
+        } catch (err) {
+          alert('Archivo de configuración no válido.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+  </script>
+</body>
+</html>
