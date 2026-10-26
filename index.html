@@ -37,10 +37,10 @@
         </div>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-        <button onclick="installPWA()" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 border border-indigo-300/35 cursor-pointer">
+        <button type="button" onclick="installPWA()" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 border border-indigo-300/35 cursor-pointer">
           <i class="fa-solid fa-download text-xs"></i> Instalar
         </button>
-        <button onclick="dismissInstallBanner()" class="text-indigo-200 hover:text-white p-2 rounded-lg text-xs transition cursor-pointer">
+        <button type="button" onclick="dismissInstallBanner()" class="text-indigo-200 hover:text-white p-2 rounded-lg text-xs transition cursor-pointer">
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
@@ -62,20 +62,20 @@
     </div>
     
     <div class="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 w-full sm:w-auto">
-      <button onclick="document.getElementById('projectFileInput').click()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="document.getElementById('projectFileInput').click()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
         <i class="fa-solid fa-folder-open text-amber-500"></i> <span>Abrir</span>
       </button>
       <input type="file" id="projectFileInput" accept=".json" class="hidden" onchange="importProject(event)">
 
-      <button onclick="exportProject()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/70 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="exportProject()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/70 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
         <i class="fa-solid fa-floppy-disk text-indigo-600"></i> <span>Guardar</span>
       </button>
 
-      <button onclick="downloadHtml()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm hover:shadow-indigo-200 flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="downloadHtml()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm hover:shadow-indigo-200 flex items-center gap-1.5 cursor-pointer">
         <i class="fa-solid fa-download"></i> <span>Descargar</span>
       </button>
 
-      <button onclick="copyCode()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="copyCode()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 cursor-pointer">
         <i class="fa-regular fa-copy"></i> <span>Copiar</span>
       </button>
     </div>
@@ -142,37 +142,6 @@
         </div>
       </div>
 
-      <!-- Botones y Accesos Directos Web -->
-      <div class="space-y-2.5 bg-emerald-50/30 p-3.5 rounded-2xl border border-emerald-100">
-        <div class="flex items-center justify-between">
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-emerald-900">Accesos Directos / Web</label>
-          <span class="text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Enlaces Externos</span>
-        </div>
-        <p class="text-[11px] text-slate-500">Añade botones que apunten a webs o programas para descargar.</p>
-
-        <div class="space-y-2">
-          <input type="text" id="linkTitleInput" placeholder="Título del enlace (Ej: Web Oficial Google)" 
-                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
-          <input type="url" id="linkUrlInput" placeholder="URL Destino (Ej: https://google.com)" 
-                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
-          <input type="text" id="linkDescInput" placeholder="Descripción corta (opcional)" 
-                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium"
-                 onkeypress="if(event.key === 'Enter') { addExternalLink(); event.preventDefault(); }">
-          
-          <button type="button" onclick="addExternalLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-plus"></i> Añadir Botón Enlace
-          </button>
-        </div>
-
-        <div class="space-y-1 pt-2">
-          <div class="flex items-center justify-between">
-            <label class="block text-[10px] font-bold uppercase text-slate-400">Botones Añadidos:</label>
-            <button type="button" onclick="removeAllLinks()" id="clearLinksBtn" class="text-[10px] text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar botones</button>
-          </div>
-          <div id="linksListContainer" class="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar p-1"></div>
-        </div>
-      </div>
-
       <!-- Subida de Archivos -->
       <div class="space-y-2">
         <div class="flex items-center justify-between">
@@ -189,13 +158,32 @@
         </div>
       </div>
 
-      <!-- Lista de Archivos -->
+      <!-- Añadir Enlace Web Externo a la Sección Activa (con descripción) -->
+      <div class="space-y-2 bg-emerald-50/30 p-3.5 rounded-2xl border border-emerald-100">
+        <div class="flex items-center justify-between">
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-emerald-900">Añadir Botón Web / Enlace a: <span id="activePageLinkIndicator" class="font-bold underline">Documentos</span></label>
+        </div>
+        <div class="space-y-1.5">
+          <input type="text" id="sectionLinkTitle" placeholder="Título del botón (Ej: Web Oficial Google)" 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
+          <input type="url" id="sectionLinkUrl" placeholder="URL Destino (Ej: https://google.com)" 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
+          <input type="text" id="sectionLinkDesc" placeholder="Descripción corta opcional..." 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium"
+                 onkeypress="if(event.key === 'Enter') { addSectionLink(); event.preventDefault(); }">
+          <button type="button" onclick="addSectionLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-xl transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-plus text-[10px]"></i> Añadir Botón Enlace a esta sección
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de Elementos (Archivos y Enlaces de la sección activa) -->
       <div class="flex-1 flex flex-col space-y-2.5 min-h-[160px]">
         <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Archivos (<span id="fileCount">0</span>)</h3>
+          <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Elementos en la sección (<span id="fileCount">0</span>)</h3>
           <button type="button" onclick="removeAllFilesActivePage()" id="clearBtn" class="text-xs text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar sección</button>
         </div>
-        <div id="fileList" class="space-y-2.5 flex-1 overflow-y-auto max-h-[240px] pr-1 custom-scrollbar"></div>
+        <div id="fileList" class="space-y-2.5 flex-1 overflow-y-auto max-h-[220px] pr-1 custom-scrollbar"></div>
       </div>
     </section>
 
@@ -241,7 +229,6 @@
         { name: "Instalador_App.exe", size: "14.5 MB", type: "exe", description: "Ejecutable principal del sistema." }
       ]
     };
-    let externalLinks = [];
     let activePage = "Documentos";
     let previewActivePage = "home";
     let deferredPrompt = null;
@@ -284,16 +271,19 @@
 
       setupDragAndDrop();
       renderPagesTabs();
-      renderLinksList();
       renderFileList();
       updatePreview();
 
-      document.getElementById('siteTitle').addEventListener('input', updatePreview);
-      document.getElementById('siteDescription').addEventListener('input', updatePreview);
+      const titleInput = document.getElementById('siteTitle');
+      const descInput = document.getElementById('siteDescription');
+      if (titleInput) titleInput.addEventListener('input', updatePreview);
+      if (descInput) descInput.addEventListener('input', updatePreview);
     };
 
     function setupDragAndDrop() {
       const dropZone = document.getElementById('dropZone');
+      if (!dropZone) return;
+
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
         dropZone.addEventListener(eName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
       });
@@ -304,15 +294,20 @@
         dropZone.addEventListener(eName, () => dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/70'), false);
       });
       dropZone.addEventListener('drop', (e) => {
-        handleFiles(e.dataTransfer.files);
+        if (e.dataTransfer && e.dataTransfer.files) {
+          handleFiles(e.dataTransfer.files);
+        }
       });
-      dropZone.addEventListener('click', () => {
-        document.getElementById('fileInput').click();
+      dropZone.addEventListener('click', (e) => {
+        if (e.target.id === 'fileInput') return;
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) fileInput.click();
       });
     }
 
     function addPage() {
       const input = document.getElementById('newPageInput');
+      if (!input) return;
       const pageName = input.value.trim();
       if (!pageName) return;
 
@@ -331,12 +326,12 @@
     }
 
     function deletePage(pageName, event) {
-      event.stopPropagation();
+      if (event) event.stopPropagation();
       if (Object.keys(pagesData).length <= 1) {
         alert('Debes mantener al menos una página en el sitio.');
         return;
       }
-      if (confirm('¿Eliminar la página "' + pageName + '" y sus archivos?')) {
+      if (confirm('¿Eliminar la página "' + pageName + '" y sus elementos?')) {
         delete pagesData[pageName];
         activePage = Object.keys(pagesData)[0];
         renderPagesTabs();
@@ -355,31 +350,36 @@
     function renderPagesTabs() {
       const container = document.getElementById('pagesTabsContainer');
       const indicator = document.getElementById('activePageIndicator');
-      indicator.textContent = activePage;
+      const linkIndicator = document.getElementById('activePageLinkIndicator');
+      if (indicator) indicator.textContent = activePage;
+      if (linkIndicator) linkIndicator.textContent = activePage;
+      if (!container) return;
 
       let html = '';
       Object.keys(pagesData).forEach(pageName => {
         const isActive = pageName === activePage;
         const activeClass = isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
-        html += '<div onclick="switchPage(\'' + pageName.replace(/'/g, "\\'") + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
+        const escapedName = pageName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        html += '<div onclick="switchPage(\'' + escapedName + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
                 '<span>' + pageName + '</span>' +
-                '<span onclick="deletePage(\'' + pageName.replace(/'/g, "\\'") + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
+                '<span onclick="deletePage(\'' + escapedName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
                 '</div>';
       });
       container.innerHTML = html;
     }
 
-    function addExternalLink() {
-      const titleInput = document.getElementById('linkTitleInput');
-      const urlInput = document.getElementById('linkUrlInput');
-      const descInput = document.getElementById('linkDescInput');
+    function addSectionLink() {
+      const titleInput = document.getElementById('sectionLinkTitle');
+      const urlInput = document.getElementById('sectionLinkUrl');
+      const descInput = document.getElementById('sectionLinkDesc');
+      if (!titleInput || !urlInput) return;
 
       const title = titleInput.value.trim();
       let url = urlInput.value.trim();
-      const description = descInput.value.trim();
+      const description = descInput ? descInput.value.trim() : '';
 
       if (!title || !url) {
-        alert('Por favor introduce al menos un Título y una URL válida.');
+        alert('Por favor introduce un Título y una URL.');
         return;
       }
 
@@ -387,54 +387,25 @@
         url = 'https://' + url;
       }
 
-      externalLinks.push({ title: title, url: url, description: description });
+      if (!pagesData[activePage]) pagesData[activePage] = [];
+      pagesData[activePage].push({
+        name: title,
+        url: url,
+        type: 'url',
+        description: description
+      });
+
       titleInput.value = '';
       urlInput.value = '';
-      descInput.value = '';
+      if (descInput) descInput.value = '';
 
-      renderLinksList();
+      renderFileList();
       updatePreview();
-      showToast('Enlace externo añadido');
-    }
-
-    function removeExternalLink(index) {
-      externalLinks.splice(index, 1);
-      renderLinksList();
-      updatePreview();
-    }
-
-    function removeAllLinks() {
-      if (confirm('¿Eliminar todos los enlaces externos?')) {
-        externalLinks = [];
-        renderLinksList();
-        updatePreview();
-      }
-    }
-
-    function renderLinksList() {
-      const container = document.getElementById('linksListContainer');
-      const clearBtn = document.getElementById('clearLinksBtn');
-      clearBtn.classList.toggle('hidden', externalLinks.length === 0);
-
-      if (externalLinks.length === 0) {
-        container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">No se han añadido botones de enlace.</p>';
-        return;
-      }
-
-      let html = '';
-      externalLinks.forEach((link, idx) => {
-        html += '<div class="p-2 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-2 shadow-sm text-xs">' +
-                '<div class="min-w-0 flex-1">' +
-                '<p class="font-bold text-slate-800 truncate" title="' + link.title + '">' + link.title + '</p>' +
-                '<p class="text-[9px] text-emerald-600 truncate">' + link.url + '</p>' +
-                '</div>' +
-                '<button type="button" onclick="removeExternalLink(' + idx + ')" class="text-slate-300 hover:text-rose-500 p-1 rounded-lg transition shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>' +
-                '</div>';
-      });
-      container.innerHTML = html;
+      showToast('Enlace añadido a ' + activePage);
     }
 
     function handleFiles(files) {
+      if (!files || files.length === 0) return;
       if (!pagesData[activePage]) pagesData[activePage] = [];
       Array.from(files).forEach(file => {
         const ext = file.name.split('.').pop().toLowerCase();
@@ -459,7 +430,7 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
-    function removeFile(index) {
+    function removeItem(index) {
       pagesData[activePage].splice(index, 1);
       renderFileList();
       updatePreview();
@@ -473,9 +444,11 @@
       }
     }
 
-    function updateFileDescription(index, text) {
-      pagesData[activePage][index].description = text;
-      updatePreview();
+    function updateItemDescription(index, text) {
+      if (pagesData[activePage] && pagesData[activePage][index]) {
+        pagesData[activePage][index].description = text;
+        updatePreview();
+      }
     }
 
     function getFileIcon(ext) {
@@ -509,35 +482,53 @@
       const listEl = document.getElementById('fileList');
       const countEl = document.getElementById('fileCount');
       const clearBtn = document.getElementById('clearBtn');
-      const currentFiles = pagesData[activePage] || [];
+      if (!listEl) return;
+      const currentItems = pagesData[activePage] || [];
 
-      countEl.textContent = currentFiles.length;
-      clearBtn.classList.toggle('hidden', currentFiles.length === 0);
+      if (countEl) countEl.textContent = currentItems.length;
+      if (clearBtn) clearBtn.classList.toggle('hidden', currentItems.length === 0);
 
-      if (currentFiles.length === 0) {
-        listEl.innerHTML = '<div class="text-center py-5 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">No hay archivos en "' + activePage + '".</div>';
+      if (currentItems.length === 0) {
+        listEl.innerHTML = '<div class="text-center py-5 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">No hay elementos en "' + activePage + '".</div>';
         return;
       }
 
       let html = '';
-      currentFiles.forEach((file, idx) => {
-        const iconInfo = getFileIcon(file.type);
-        html += '<div class="p-3 bg-white border border-slate-200/80 rounded-2xl space-y-2 shadow-sm">' +
-                '<div class="flex items-center justify-between gap-2">' +
-                '<div class="flex items-center gap-2 min-w-0">' +
-                '<div class="w-7 h-7 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-xs"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
-                '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + file.name + '">' + file.name + '</p>' +
-                '<p class="text-[9px] text-slate-400 uppercase font-medium">' + file.type + ' • ' + file.size + '</p></div></div>' +
-                '<button type="button" onclick="removeFile(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
-                '<div><input type="text" value="' + (file.description || '').replace(/"/g, '&quot;') + '" oninput="updateFileDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
+      currentItems.forEach((item, idx) => {
+        const isLink = item.type === 'url';
+        const descVal = (item.description || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        
+        if (isLink) {
+          html += '<div class="p-3 bg-white border border-emerald-200/80 rounded-2xl space-y-2 shadow-sm">' +
+                  '<div class="flex items-center justify-between gap-2">' +
+                  '<div class="flex items-center gap-2 min-w-0">' +
+                  '<div class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-globe"></i></div>' +
+                  '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + item.name + '">' + item.name + '</p>' +
+                  '<p class="text-[9px] text-emerald-600 truncate font-medium">' + item.url + '</p></div></div>' +
+                  '<button type="button" onclick="removeItem(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
+                  '<div><input type="text" value="' + descVal + '" oninput="updateItemDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
+        } else {
+          const iconInfo = getFileIcon(item.type);
+          html += '<div class="p-3 bg-white border border-slate-200/80 rounded-2xl space-y-2 shadow-sm">' +
+                  '<div class="flex items-center justify-between gap-2">' +
+                  '<div class="flex items-center gap-2 min-w-0">' +
+                  '<div class="w-7 h-7 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-xs"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                  '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + item.name + '">' + item.name + '</p>' +
+                  '<p class="text-[9px] text-slate-400 uppercase font-medium">' + item.type + ' • ' + item.size + '</p></div></div>' +
+                  '<button type="button" onclick="removeItem(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
+                  '<div><input type="text" value="' + descVal + '" oninput="updateItemDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
+        }
       });
       listEl.innerHTML = html;
     }
 
     function toggleSiteDescription() {
-      const isChecked = document.getElementById('toggleDesc').checked;
-      document.getElementById('descContainer').classList.toggle('hidden', !isChecked);
-      updatePreview();
+      const toggleEl = document.getElementById('toggleDesc');
+      const descContainer = document.getElementById('descContainer');
+      if (toggleEl && descContainer) {
+        descContainer.classList.toggle('hidden', !toggleEl.checked);
+        updatePreview();
+      }
     }
 
     function previewNavigate(page) {
@@ -547,77 +538,81 @@
 
     function updatePreview() {
       const previewContainer = document.getElementById('previewContainer');
-      const title = document.getElementById('siteTitle').value || 'Centro de Descargas';
-      const showDesc = document.getElementById('toggleDesc').checked;
-      const description = document.getElementById('siteDescription').value;
+      const titleInput = document.getElementById('siteTitle');
+      const toggleDesc = document.getElementById('toggleDesc');
+      const descInput = document.getElementById('siteDescription');
+      if (!previewContainer) return;
+
+      const title = titleInput ? (titleInput.value || 'Centro de Descargas') : 'Centro de Descargas';
+      const showDesc = toggleDesc ? toggleDesc.checked : true;
+      const description = descInput ? descInput.value : '';
       const pageNames = Object.keys(pagesData);
 
       if (previewActivePage === 'home') {
         let navButtonsHTML = '';
         pageNames.forEach(pName => {
           const count = (pagesData[pName] || []).length;
-          navButtonsHTML += '<div onclick="previewNavigate(\'' + pName.replace(/'/g, "\\'") + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between">' +
+          const escapedName = pName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          navButtonsHTML += '<div onclick="previewNavigate(\'' + escapedName + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between">' +
                             '<div class="flex items-center gap-3 min-w-0">' +
                             '<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>' +
                             '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">' + pName + '</h3>' +
-                            '<p class="text-[11px] text-slate-400">' + count + ' archivos disponibles</p></div></div>' +
+                            '<p class="text-[11px] text-slate-400">' + count + ' elementos disponibles</p></div></div>' +
                             '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>';
-        });
-
-        let linkButtonsHTML = '';
-        externalLinks.forEach(link => {
-          linkButtonsHTML += '<a href="' + link.url + '" target="_blank" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-emerald-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 flex items-center justify-between text-left">' +
-                             '<div class="flex items-center gap-3 min-w-0">' +
-                             '<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-globe"></i></div>' +
-                             '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-emerald-600 transition truncate">' + link.title + '</h3>' +
-                             '<p class="text-[11px] text-slate-400 truncate">' + (link.description || link.url) + '</p></div></div>' +
-                             '<i class="fa-solid fa-arrow-up-right-from-square text-slate-300 group-hover:text-emerald-600 transition shrink-0 ml-2 text-xs"></i></a>';
         });
 
         let descHTML = (showDesc && description) ? '<p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed px-2">' + description + '</p>' : '';
         previewContainer.innerHTML = '<div class="space-y-4"><div class="text-center space-y-1.5"><h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight px-2">' + title + '</h1>' + descHTML + '</div>' +
-                                     (pageNames.length > 0 ? '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + navButtonsHTML + '</div>' : '') +
-                                     (externalLinks.length > 0 ? '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-3">Accesos y Descargas Externas:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + linkButtonsHTML + '</div>' : '') +
-                                     (pageNames.length === 0 && externalLinks.length === 0 ? '<p class="text-center text-xs text-slate-400 py-4">No hay secciones ni enlaces configurados.</p>' : '') +
-                                     '</div>';
+                                     '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div>' +
+                                     '<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + (pageNames.length > 0 ? navButtonsHTML : '<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>') + '</div></div>';
         return;
       }
 
-      const currentFiles = pagesData[previewActivePage] || [];
+      const currentItems = pagesData[previewActivePage] || [];
       let cardsHTML = '';
-      currentFiles.forEach(file => {
-        const iconInfo = getFileIcon(file.type);
-        const displayName = cleanFileName(file.name);
-        const hasDesc = file.description && file.description.trim() !== '';
+      currentItems.forEach(item => {
+        if (item.type === 'url') {
+          const hasDesc = item.description && item.description.trim() !== '';
+          cardsHTML += '<a href="' + item.url + '" target="_blank" class="group bg-white border border-slate-200/80 hover:border-emerald-300 rounded-2xl p-4 shadow-sm transition flex flex-col justify-between">' +
+                       '<div class="space-y-2"><div class="flex items-center justify-between">' +
+                       '<div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shadow-inner"><i class="fa-solid fa-globe"></i></div>' +
+                       '<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Enlace Web</span></div>' +
+                       '<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="' + item.name + '">' + item.name + '</h4>' +
+                       (hasDesc ? '<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">' + item.description + '</p>' : '<p class="text-[11px] text-emerald-600 mt-1 truncate">' + item.url + '</p>') + '</div></div>' +
+                       '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">Externo</span>' +
+                       '<span class="text-[11px] font-bold text-emerald-600 flex items-center gap-1">Visitar <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></span></div></a>';
+        } else {
+          const iconInfo = getFileIcon(item.type);
+          const displayName = cleanFileName(item.name);
+          const hasDesc = item.description && item.description.trim() !== '';
 
-        cardsHTML += '<div class="group bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm transition flex flex-col justify-between">' +
-                     '<div class="space-y-2"><div class="flex items-center justify-between">' +
-                     '<div class="w-9 h-9 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
-                     '<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ' + iconInfo.bg + ' ' + iconInfo.color + ' border">.' + file.type + '</span></div>' +
-                     '<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="' + displayName + '">' + displayName + '</h4>' +
-                     (hasDesc ? '<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">' + file.description + '</p>' : '') + '</div></div>' +
-                     '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">' + file.size + '</span>' +
-                     '<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></div>';
+          cardsHTML += '<div class="group bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm transition flex flex-col justify-between">' +
+                       '<div class="space-y-2"><div class="flex items-center justify-between">' +
+                       '<div class="w-9 h-9 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
+                       '<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ' + iconInfo.bg + ' ' + iconInfo.color + ' border">.' + item.type + '</span></div>' +
+                       '<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="' + displayName + '">' + displayName + '</h4>' +
+                       (hasDesc ? '<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">' + item.description + '</p>' : '') + '</div></div>' +
+                       '<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">' + item.size + '</span>' +
+                       '<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></div>';
+        }
       });
 
       previewContainer.innerHTML = '<div class="space-y-4"><div class="flex items-center justify-between border-b border-slate-200/60 pb-2.5">' +
                                    '<button type="button" onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>' +
                                    '<span class="text-[11px] font-extrabold uppercase text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full truncate max-w-[150px] sm:max-w-xs">' + previewActivePage + '</span></div>' +
-                                   '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + (cardsHTML || '<div class="col-span-2 text-center py-6 text-xs text-slate-400">Esta sección no tiene archivos.</div>') + '</div></div>';
+                                   '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + (cardsHTML || '<div class="col-span-2 text-center py-6 text-xs text-slate-400">Esta sección no tiene elementos.</div>') + '</div></div>';
     }
 
     function generateFullHTML() {
-      const title = document.getElementById('siteTitle').value || 'Centro de Descargas';
-      const showDesc = document.getElementById('toggleDesc').checked;
-      const description = document.getElementById('siteDescription').value;
+      const titleInput = document.getElementById('siteTitle');
+      const toggleDesc = document.getElementById('toggleDesc');
+      const descInput = document.getElementById('siteDescription');
+
+      const title = titleInput ? (titleInput.value || 'Centro de Descargas') : 'Centro de Descargas';
+      const showDesc = toggleDesc ? toggleDesc.checked : true;
+      const description = descInput ? descInput.value : '';
       
-      const packageData = { 
-        title: title, 
-        showDesc: showDesc, 
-        description: description, 
-        pages: pagesData,
-        links: externalLinks 
-      };
+      const packageData = { title: title, showDesc: showDesc, description: description, pages: pagesData };
       const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(packageData))));
 
       return '<!DOCTYPE html>\n' +
@@ -668,53 +663,55 @@
              '    }\n\n' +
              '    function render() {\n' +
              '      const root = document.getElementById("appRoot");\n' +
-             '      const pageNames = Object.keys(data.pages || {});\n' +
-             '      const links = data.links || [];\n\n' +
+             '      const pageNames = Object.keys(data.pages || {});\n\n' +
              '      if (currentView === "home") {\n' +
              '        let buttonsHTML = "";\n' +
              '        pageNames.forEach(pName => {\n' +
              '          const count = (data.pages[pName] || []).length;\n' +
-             '          buttonsHTML += \'<div onclick="currentView=\\\'\'+pName.replace(/'/g, "\\\\'")+\'\\\'; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '          const esc = pName.replace(/\'/g, "\\\\\'").replace(/"/g, "&quot;");\n' +
+             '          buttonsHTML += \'<div onclick="currentView=\\\'\'+esc+\'\\\'; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
              '                         \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
              '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
              '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">\' + pName + \'</h3>\' +\n' +
-             '                         \'<p class="text-[11px] text-slate-400">\' + count + \' archivos disponibles</p></div></div>\' +\n' +
+             '                         \'<p class="text-[11px] text-slate-400">\' + count + \' elementos disponibles</p></div></div>\' +\n' +
              '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>\';\n' +
-             '        });\n\n' +
-             '        let linkButtonsHTML = "";\n' +
-             '        links.forEach(link => {\n' +
-             '          linkButtonsHTML += \'<a href="\' + link.url + \'" target="_blank" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-emerald-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 flex items-center justify-between backdrop-blur-md">\' +\n' +
-             '                             \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
-             '                             \'<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-globe"></i></div>\' +\n' +
-             '                             \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-emerald-600 transition truncate">\' + link.title + \'</h3>\' +\n' +
-             '                             \'<p class="text-[11px] text-slate-400 truncate">\' + (link.description || link.url) + \'</p></div></div>\' +\n' +
-             '                             \'<i class="fa-solid fa-arrow-up-right-from-square text-slate-300 group-hover:text-emerald-600 transition shrink-0 ml-2 text-xs"></i></a>\';\n' +
              '        });\n\n' +
              '        let descHTML = (data.showDesc && data.description) ? \'<p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto px-2">\' + data.description + \'</p>\' : "";\n' +
              '        root.innerHTML = \'<div class="text-center space-y-2.5 max-w-2xl mx-auto"><h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight px-2">\' + data.title + \'</h1>\' + descHTML + \'</div>\' +\n' +
-             '                         (pageNames.length > 0 ? \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + buttonsHTML + \'</div>\' : "") +\n' +
-             '                         (links.length > 0 ? \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-4">Accesos y Descargas Externas:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + linkButtonsHTML + \'</div>\' : "") +\n' +
-             '                         (pageNames.length === 0 && links.length === 0 ? \'<p class="text-center text-xs text-slate-400 py-6">No hay secciones ni enlaces disponibles.</p>\' : "");\n' +
+             '                         \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div>\' +\n' +
+             '                         \'<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
              '      } else {\n' +
-             '        const files = data.pages[currentView] || [];\n' +
+             '        const items = data.pages[currentView] || [];\n' +
              '        let cardsHTML = "";\n' +
-             '        files.forEach(file => {\n' +
-             '          const iconInfo = getFileIcon(file.type);\n' +
-             '          const displayName = cleanFileName(file.name);\n' +
-             '          const hasDesc = file.description && file.description.trim() !== "";\n' +
-             '          cardsHTML += \'<a href="\' + file.name + \'" download="\' + file.name + \'" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
+             '        items.forEach(item => {\n' +
+             '          if (item.type === "url") {\n' +
+             '            const hasDesc = item.description && item.description.trim() !== "";\n' +
+             '            cardsHTML += \'<a href="\' + item.url + \'" target="_blank" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-emerald-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
+             '                         \'<div class="space-y-2"><div class="flex items-center justify-between">\' +\n' +
+             '                         \'<div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shadow-inner"><i class="fa-solid fa-globe"></i></div>\' +\n' +
+             '                         \'<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Enlace Web</span></div>\' +\n' +
+             '                         \'<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="\' + item.name + \'">\' + item.name + \'</h4>\' +\n' +
+             '                         (hasDesc ? \'<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">\' + item.description + \'</p>\' : \'<p class="text-[11px] text-emerald-600 mt-1 truncate">\' + item.url + \'</p>\') + \'</div></div>\' +\n' +
+             '                         \'<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">Externo</span>\' +\n' +
+             '                         \'<span class="text-[11px] font-bold text-emerald-600 flex items-center gap-1">Visitar <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></span></div></a>\';\n' +
+             '          } else {\n' +
+             '            const iconInfo = getFileIcon(item.type);\n' +
+             '            const displayName = cleanFileName(item.name);\n' +
+             '            const hasDesc = item.description && item.description.trim() !== "";\n' +
+             '            cardsHTML += \'<a href="\' + item.name + \'" download="\' + item.name + \'" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between backdrop-blur-md">\' +\n' +
              '                         \'<div class="space-y-2"><div class="flex items-center justify-between">\' +\n' +
              '                         \'<div class="w-9 h-9 rounded-xl \' + iconInfo.bg + \' \' + iconInfo.color + \' border flex items-center justify-center text-sm shadow-inner"><i class="fa-solid \' + iconInfo.icon + \'"></i></div>\' +\n' +
-             '                         \'<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full \' + iconInfo.bg + \' \' + iconInfo.color + \' border">.\' + file.type + \'</span></div>\' +\n' +
+             '                         \'<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full \' + iconInfo.bg + \' \' + iconInfo.color + \' border">.\' + item.type + \'</span></div>\' +\n' +
              '                         \'<div><h4 class="font-bold text-slate-800 text-xs sm:text-sm truncate" title="\' + displayName + \'">\' + displayName + \'</h4>\' +\n' +
-             '                         (hasDesc ? \'<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">\' + file.description + \'</p>\' : "") + \'</div></div>\' +\n' +
-             '                         \'<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">\' + file.size + \'</span>\' +\n' +
+             '                         (hasDesc ? \'<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-snug">\' + item.description + \'</p>\' : "") + \'</div></div>\' +\n' +
+             '                         \'<div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between"><span class="text-[10px] font-medium text-slate-400">\' + item.size + \'</span>\' +\n' +
              '                         \'<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></a>\';\n' +
+             '          }\n' +
              '        });\n' +
              '        root.innerHTML = \'<div class="space-y-4 max-w-5xl mx-auto px-2"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">\' +\n' +
-             '                         \'<button type="button" onclick="currentView=\\\\'home\\\\'; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
+             '                         \'<button type="button" onclick="currentView=\\\'home\\\'; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
              '                         \'<h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 truncate max-w-[200px] sm:max-w-md">\' + currentView + \'</h1></div>\' +\n' +
-             '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
+             '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay elementos en esta sección.</div>\') + \'</div></div>\';\n' +
              '      }\n' +
              '    }\n' +
              '    render();\n' +
@@ -750,6 +747,7 @@
 
     function showToast(message) {
       const toast = document.getElementById('toast');
+      if (!toast) return;
       toast.querySelector('span').textContent = message;
       toast.classList.remove('translate-y-20', 'opacity-0');
       toast.classList.add('translate-y-0', 'opacity-100');
@@ -760,14 +758,17 @@
     }
 
     function exportProject() {
+      const titleInput = document.getElementById('siteTitle');
+      const toggleDesc = document.getElementById('toggleDesc');
+      const descInput = document.getElementById('siteDescription');
+
       const projectData = {
-        version: "2.8",
+        version: "3.1",
         date: new Date().toISOString(),
-        siteTitle: document.getElementById('siteTitle').value,
-        showDescription: document.getElementById('toggleDesc').checked,
-        siteDescription: document.getElementById('siteDescription').value,
-        pages: pagesData,
-        links: externalLinks
+        siteTitle: titleInput ? titleInput.value : '',
+        showDescription: toggleDesc ? toggleDesc.checked : true,
+        siteDescription: descInput ? descInput.value : '',
+        pages: pagesData
       };
       const jsonStr = JSON.stringify(projectData, null, 2);
       const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -789,21 +790,21 @@
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          if (data.siteTitle) document.getElementById('siteTitle').value = data.siteTitle;
-          if (data.showDescription !== undefined) {
-            document.getElementById('toggleDesc').checked = data.showDescription;
+          const titleInput = document.getElementById('siteTitle');
+          const toggleDesc = document.getElementById('toggleDesc');
+          const descInput = document.getElementById('siteDescription');
+
+          if (data.siteTitle && titleInput) titleInput.value = data.siteTitle;
+          if (data.showDescription !== undefined && toggleDesc) {
+            toggleDesc.checked = data.showDescription;
             toggleSiteDescription();
           }
-          if (data.siteDescription) document.getElementById('siteDescription').value = data.siteDescription;
+          if (data.siteDescription && descInput) descInput.value = data.siteDescription;
           if (data.pages) {
             pagesData = data.pages;
             activePage = Object.keys(pagesData)[0] || 'Inicio';
           }
-          if (data.links) {
-            externalLinks = data.links;
-          }
           renderPagesTabs();
-          renderLinksList();
           renderFileList();
           updatePreview();
           showToast('¡Proyecto multi-página cargado!');
