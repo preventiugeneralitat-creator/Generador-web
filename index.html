@@ -81,7 +81,7 @@
     </div>
   </header>
 
-  <!-- Contenido Principal Responsivo (Grid 1 columna en móvil, 12 columnas en escritorio) -->
+  <!-- Contenido Principal Responsivo -->
   <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 p-3 sm:p-6 max-w-[1700px] mx-auto w-full">
     
     <!-- Panel Izquierdo de Configuración -->
@@ -131,7 +131,7 @@
           <input type="text" id="newPageInput" placeholder="Ej: Documentación, Software..." 
                  class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium"
                  onkeypress="if(event.key === 'Enter') { addPage(); event.preventDefault(); }">
-          <button onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
+          <button type="button" onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
             <i class="fa-solid fa-plus"></i> Añadir
           </button>
         </div>
@@ -159,7 +159,7 @@
                  class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium"
                  onkeypress="if(event.key === 'Enter') { addExternalLink(); event.preventDefault(); }">
           
-          <button onclick="addExternalLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
+          <button type="button" onclick="addExternalLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
             <i class="fa-solid fa-plus"></i> Añadir Botón Enlace
           </button>
         </div>
@@ -167,7 +167,7 @@
         <div class="space-y-1 pt-2">
           <div class="flex items-center justify-between">
             <label class="block text-[10px] font-bold uppercase text-slate-400">Botones Añadidos:</label>
-            <button onclick="removeAllLinks()" id="clearLinksBtn" class="text-[10px] text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar botones</button>
+            <button type="button" onclick="removeAllLinks()" id="clearLinksBtn" class="text-[10px] text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar botones</button>
           </div>
           <div id="linksListContainer" class="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar p-1"></div>
         </div>
@@ -193,7 +193,7 @@
       <div class="flex-1 flex flex-col space-y-2.5 min-h-[160px]">
         <div class="flex items-center justify-between border-b border-slate-100 pb-2">
           <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Archivos (<span id="fileCount">0</span>)</h3>
-          <button onclick="removeAllFilesActivePage()" id="clearBtn" class="text-xs text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar sección</button>
+          <button type="button" onclick="removeAllFilesActivePage()" id="clearBtn" class="text-xs text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar sección</button>
         </div>
         <div id="fileList" class="space-y-2.5 flex-1 overflow-y-auto max-h-[240px] pr-1 custom-scrollbar"></div>
       </div>
@@ -209,7 +209,7 @@
           <p class="text-[11px] text-slate-400">Simulación interactiva multidispositivo</p>
         </div>
         <div class="flex items-center gap-2 justify-between sm:justify-end">
-          <button onclick="previewNavigate('home')" class="text-[10px] font-bold uppercase px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full transition hover:bg-indigo-100 cursor-pointer">
+          <button type="button" onclick="previewNavigate('home')" class="text-[10px] font-bold uppercase px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full transition hover:bg-indigo-100 cursor-pointer">
             <i class="fa-solid fa-house"></i> Inicio
           </button>
           <span class="text-[10px] font-bold uppercase px-2.5 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 rounded-full flex items-center gap-1.5">
@@ -428,7 +428,7 @@
                 '<p class="font-bold text-slate-800 truncate" title="' + link.title + '">' + link.title + '</p>' +
                 '<p class="text-[9px] text-emerald-600 truncate">' + link.url + '</p>' +
                 '</div>' +
-                '<button onclick="removeExternalLink(' + idx + ')" class="text-slate-300 hover:text-rose-500 p-1 rounded-lg transition shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>' +
+                '<button type="button" onclick="removeExternalLink(' + idx + ')" class="text-slate-300 hover:text-rose-500 p-1 rounded-lg transition shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>' +
                 '</div>';
       });
       container.innerHTML = html;
@@ -528,7 +528,7 @@
                 '<div class="w-7 h-7 rounded-xl ' + iconInfo.bg + ' ' + iconInfo.color + ' border flex items-center justify-center shrink-0 text-xs"><i class="fa-solid ' + iconInfo.icon + '"></i></div>' +
                 '<div class="truncate"><p class="text-xs font-semibold text-slate-700 truncate" title="' + file.name + '">' + file.name + '</p>' +
                 '<p class="text-[9px] text-slate-400 uppercase font-medium">' + file.type + ' • ' + file.size + '</p></div></div>' +
-                '<button onclick="removeFile(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
+                '<button type="button" onclick="removeFile(' + idx + ')" class="text-slate-300 hover:text-rose-500 transition p-1.5 rounded-lg hover:bg-rose-50 shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
                 '<div><input type="text" value="' + (file.description || '').replace(/"/g, '&quot;') + '" oninput="updateFileDescription(' + idx + ', this.value)" placeholder="Explicación opcional..." class="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 focus:bg-white focus:border-indigo-400 outline-none transition"></div></div>';
       });
       listEl.innerHTML = html;
@@ -601,7 +601,7 @@
       });
 
       previewContainer.innerHTML = '<div class="space-y-4"><div class="flex items-center justify-between border-b border-slate-200/60 pb-2.5">' +
-                                   '<button onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>' +
+                                   '<button type="button" onclick="previewNavigate(\'home\')" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>' +
                                    '<span class="text-[11px] font-extrabold uppercase text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full truncate max-w-[150px] sm:max-w-xs">' + previewActivePage + '</span></div>' +
                                    '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + (cardsHTML || '<div class="col-span-2 text-center py-6 text-xs text-slate-400">Esta sección no tiene archivos.</div>') + '</div></div>';
     }
@@ -712,7 +712,7 @@
              '                         \'<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></a>\';\n' +
              '        });\n' +
              '        root.innerHTML = \'<div class="space-y-4 max-w-5xl mx-auto px-2"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">\' +\n' +
-             '                         \'<button onclick="currentView=\\\\'home\\\\'; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
+             '                         \'<button type="button" onclick="currentView=\\\\'home\\\\'; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
              '                         \'<h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 truncate max-w-[200px] sm:max-w-md">\' + currentView + \'</h1></div>\' +\n' +
              '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
              '      }\n' +
@@ -761,7 +761,7 @@
 
     function exportProject() {
       const projectData = {
-        version: "2.7",
+        version: "2.8",
         date: new Date().toISOString(),
         siteTitle: document.getElementById('siteTitle').value,
         showDescription: document.getElementById('toggleDesc').checked,
