@@ -142,6 +142,37 @@
         </div>
       </div>
 
+      <!-- NUEVO: Botones y Accesos Directos Web -->
+      <div class="space-y-2.5 bg-emerald-50/30 p-3.5 rounded-2xl border border-emerald-100">
+        <div class="flex items-center justify-between">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-emerald-900">Accesos Directos / Web</label>
+          <span class="text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Enlaces Externos</span>
+        </div>
+        <p class="text-[11px] text-slate-500">Añade botones que apunten a webs o programas para descargar.</p>
+
+        <div class="space-y-2">
+          <input type="text" id="linkTitleInput" placeholder="Título del enlace (Ej: Web Oficial Google)" 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
+          <input type="url" id="linkUrlInput" placeholder="URL Destino (Ej: https://google.com)" 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium">
+          <input type="text" id="linkDescInput" placeholder="Descripción corta (opcional)" 
+                 class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-white font-medium"
+                 onkeypress="if(event.key === 'Enter') { addExternalLink(); event.preventDefault(); }">
+          
+          <button onclick="addExternalLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> Añadir Botón Enlace
+          </button>
+        </div>
+
+        <div class="space-y-1 pt-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Botones Añadidos:</label>
+            <button onclick="removeAllLinks()" id="clearLinksBtn" class="text-[10px] text-rose-500 hover:text-rose-600 font-medium hidden transition cursor-pointer">Vaciar botones</button>
+          </div>
+          <div id="linksListContainer" class="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar p-1"></div>
+        </div>
+      </div>
+
       <!-- Subida de Archivos -->
       <div class="space-y-2">
         <div class="flex items-center justify-between">
@@ -210,6 +241,7 @@
         { name: "Instalador_App.exe", size: "14.5 MB", type: "exe", description: "Ejecutable principal del sistema." }
       ]
     };
+    let externalLinks = [];
     let activePage = "Documentos";
     let previewActivePage = "home";
     let deferredPrompt = null;
@@ -252,6 +284,7 @@
 
       setupDragAndDrop();
       renderPagesTabs();
+      renderLinksList();
       renderFileList();
       updatePreview();
 
@@ -331,6 +364,72 @@
         html += '<div onclick="switchPage(\'' + pageName + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
                 '<span>' + pageName + '</span>' +
                 '<span onclick="deletePage(\'' + pageName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
+                '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    /* FUNCIONES DE GESTIÓN DE ENLACES EXTERNOS */
+    function addExternalLink() {
+      const titleInput = document.getElementById('linkTitleInput');
+      const urlInput = document.getElementById('linkUrlInput');
+      const descInput = document.getElementById('linkDescInput');
+
+      const title = titleInput.value.trim();
+      let url = urlInput.value.trim();
+      const description = descInput.value.trim();
+
+      if (!title || !url) {
+        alert('Por favor introduce al menos un Título y una URL válida.');
+        return;
+      }
+
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+
+      externalLinks.push({ title: title, url: url, description: description });
+      titleInput.value = '';
+      urlInput.value = '';
+      descInput.value = '';
+
+      renderLinksList();
+      updatePreview();
+      showToast('Enlace externo añadido');
+    }
+
+    function removeExternalLink(index) {
+      externalLinks.splice(index, 1);
+      renderLinksList();
+      updatePreview();
+    }
+
+    function removeAllLinks() {
+      if (confirm('¿Eliminar todos los enlaces externos?')) {
+        externalLinks = [];
+        renderLinksList();
+        updatePreview();
+      }
+    }
+
+    function renderLinksList() {
+      const container = document.getElementById('linksListContainer');
+      const clearBtn = document.getElementById('clearLinksBtn');
+      clearBtn.classList.toggle('hidden', externalLinks.length === 0);
+
+      if (externalLinks.length === 0) {
+        container.innerHTML = '<p class="text-[10px] text-slate-400 text-center py-2">No se han añadido botones de enlace.</p>';
+        return;
+      }
+
+      let html = '';
+      externalLinks.forEach((link, idx) => {
+        html += '<div class="p-2 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-2 shadow-sm text-xs">' +
+                '<div class="min-w-0 flex-1">' +
+                '<p class="font-bold text-slate-800 truncate" title="' + link.title + '">' + link.title + '</p>' +
+                '<p class="text-[9px] text-emerald-600 truncate">' + link.url + '</p>' +
+                '</div>' +
+                '<button onclick="removeExternalLink(' + idx + ')" class="text-slate-300 hover:text-rose-500 p-1 rounded-lg transition shrink-0 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>' +
                 '</div>';
       });
       container.innerHTML = html;
@@ -466,10 +565,22 @@
                             '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>';
         });
 
+        let linkButtonsHTML = '';
+        externalLinks.forEach(link => {
+          linkButtonsHTML += '<a href="' + link.url + '" target="_blank" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-emerald-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 flex items-center justify-between text-left">' +
+                             '<div class="flex items-center gap-3 min-w-0">' +
+                             '<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-globe"></i></div>' +
+                             '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-emerald-600 transition truncate">' + link.title + '</h3>' +
+                             '<p class="text-[11px] text-slate-400 truncate">' + (link.description || link.url) + '</p></div></div>' +
+                             '<i class="fa-solid fa-arrow-up-right-from-square text-slate-300 group-hover:text-emerald-600 transition shrink-0 ml-2 text-xs"></i></a>';
+        });
+
         let descHTML = (showDesc && description) ? '<p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed px-2">' + description + '</p>' : '';
         previewContainer.innerHTML = '<div class="space-y-4"><div class="text-center space-y-1.5"><h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight px-2">' + title + '</h1>' + descHTML + '</div>' +
-                                     '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div>' +
-                                     '<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + (pageNames.length > 0 ? navButtonsHTML : '<p class="text-center text-xs text-slate-400">No hay páginas creadas.</p>') + '</div></div>';
+                                     (pageNames.length > 0 ? '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-1">Secciones Disponibles:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + navButtonsHTML + '</div>' : '') +
+                                     (externalLinks.length > 0 ? '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-3">Accesos y Descargas Externas:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full">' + linkButtonsHTML + '</div>' : '') +
+                                     (pageNames.length === 0 && externalLinks.length === 0 ? '<p class="text-center text-xs text-slate-400 py-4">No hay secciones ni enlaces configurados.</p>' : '') +
+                                     '</div>';
         return;
       }
 
@@ -501,7 +612,13 @@
       const showDesc = document.getElementById('toggleDesc').checked;
       const description = document.getElementById('siteDescription').value;
       
-      const packageData = { title: title, showDesc: showDesc, description: description, pages: pagesData };
+      const packageData = { 
+        title: title, 
+        showDesc: showDesc, 
+        description: description, 
+        pages: pagesData,
+        links: externalLinks 
+      };
       const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(packageData))));
 
       return '<!DOCTYPE html>\n' +
@@ -552,22 +669,33 @@
              '    }\n\n' +
              '    function render() {\n' +
              '      const root = document.getElementById("appRoot");\n' +
-             '      const pageNames = Object.keys(data.pages || {});\n\n' +
+             '      const pageNames = Object.keys(data.pages || {});\n' +
+             '      const links = data.links || [];\n\n' +
              '      if (currentView === "home") {\n' +
              '        let buttonsHTML = "";\n' +
              '        pageNames.forEach(pName => {\n' +
              '          const count = (data.pages[pName] || []).length;\n' +
-             '          buttonsHTML += \'<div onclick="currentView="\' + pName + \'"; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '          buttonsHTML += \'<div onclick="currentView=\\\'\'+pName+\'\\\'; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
              '                         \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
              '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
              '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">\' + pName + \'</h3>\' +\n' +
              '                         \'<p class="text-[11px] text-slate-400">\' + count + \' archivos disponibles</p></div></div>\' +\n' +
              '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>\';\n' +
-             '        });\n' +
+             '        });\n\n' +
+             '        let linkButtonsHTML = "";\n' +
+             '        links.forEach(link => {\n' +
+             '          linkButtonsHTML += \'<a href="\' + link.url + \'" target="_blank" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-emerald-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '                             \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
+             '                             \'<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-globe"></i></div>\' +\n' +
+             '                             \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-emerald-600 transition truncate">\' + link.title + \'</h3>\' +\n' +
+             '                             \'<p class="text-[11px] text-slate-400 truncate">\' + (link.description || link.url) + \'</p></div></div>\' +\n' +
+             '                             \'<i class="fa-solid fa-arrow-up-right-from-square text-slate-300 group-hover:text-emerald-600 transition shrink-0 ml-2 text-xs"></i></a>\';\n' +
+             '        });\n\n' +
              '        let descHTML = (data.showDesc && data.description) ? \'<p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto px-2">\' + data.description + \'</p>\' : "";\n' +
              '        root.innerHTML = \'<div class="text-center space-y-2.5 max-w-2xl mx-auto"><h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight px-2">\' + data.title + \'</h1>\' + descHTML + \'</div>\' +\n' +
-             '                         \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div>\' +\n' +
-             '                         \'<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
+             '                         (pageNames.length > 0 ? \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + buttonsHTML + \'</div>\' : "") +\n' +
+             '                         (links.length > 0 ? \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-4">Accesos y Descargas Externas:</div><div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + linkButtonsHTML + \'</div>\' : "") +\n' +
+             '                         (pageNames.length === 0 && links.length === 0 ? \'<p class="text-center text-xs text-slate-400 py-6">No hay secciones ni enlaces disponibles.</p>\' : "");\n' +
              '      } else {\n' +
              '        const files = data.pages[currentView] || [];\n' +
              '        let cardsHTML = "";\n' +
@@ -585,7 +713,7 @@
              '                         \'<span class="text-[11px] font-bold text-indigo-600 flex items-center gap-1">Descargar <i class="fa-solid fa-arrow-down text-[9px]"></i></span></div></a>\';\n' +
              '        });\n' +
              '        root.innerHTML = \'<div class="space-y-4 max-w-5xl mx-auto px-2"><div class="flex items-center justify-between border-b border-slate-200/60 pb-3">\' +\n' +
-             '                         \'<button onclick="currentView="home"; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
+             '                         \'<button onclick="currentView=\\\\'home\\\\'; render();" class="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Volver</button>\' +\n' +
              '                         \'<h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 truncate max-w-[200px] sm:max-w-md">\' + currentView + \'</h1></div>\' +\n' +
              '                         \'<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">\' + (cardsHTML || \'<div class="col-span-3 text-center py-12 bg-white/60 border border-slate-200/60 rounded-3xl text-slate-400 text-xs">No hay archivos en esta sección.</div>\') + \'</div></div>\';\n' +
              '      }\n' +
@@ -634,12 +762,13 @@
 
     function exportProject() {
       const projectData = {
-        version: "2.5",
+        version: "2.6",
         date: new Date().toISOString(),
         siteTitle: document.getElementById('siteTitle').value,
         showDescription: document.getElementById('toggleDesc').checked,
         siteDescription: document.getElementById('siteDescription').value,
-        pages: pagesData
+        pages: pagesData,
+        links: externalLinks
       };
       const jsonStr = JSON.stringify(projectData, null, 2);
       const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -671,7 +800,11 @@
             pagesData = data.pages;
             activePage = Object.keys(pagesData)[0] || 'Inicio';
           }
+          if (data.links) {
+            externalLinks = data.links;
+          }
           renderPagesTabs();
+          renderLinksList();
           renderFileList();
           updatePreview();
           showToast('¡Proyecto multi-página cargado!');
