@@ -127,13 +127,27 @@
         </div>
         <p class="text-[11px] text-slate-500">Crea pestañas independientes para organizar tus archivos.</p>
         
-        <div class="flex gap-2">
-          <input type="text" id="newPageInput" placeholder="Ej: Documentación, Software..." 
-                 class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium"
-                 onkeypress="if(event.key === 'Enter') { addPage(); event.preventDefault(); }">
-          <button type="button" onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
-            <i class="fa-solid fa-plus"></i> Añadir
-          </button>
+        <div class="space-y-2">
+          <div class="flex gap-2">
+            <input type="text" id="newPageInput" placeholder="Ej: Documentación, Software..." 
+                   class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium"
+                   onkeypress="if(event.key === 'Enter') { addPage(); event.preventDefault(); }">
+            <button type="button" onclick="addPage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm cursor-pointer shrink-0">
+              <i class="fa-solid fa-plus"></i> Añadir
+            </button>
+          </div>
+
+          <!-- Opción de protección por contraseña para la nueva sección -->
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="pageProtectCheckbox" onchange="togglePagePasswordInput()" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+            <label for="pageProtectCheckbox" class="text-[11px] text-slate-600 cursor-pointer font-medium select-none flex items-center gap-1">
+              <i class="fa-solid fa-lock text-indigo-500 text-[10px]"></i> Proteger sección con contraseña
+            </label>
+          </div>
+          <div id="pagePasswordContainer" class="hidden">
+            <input type="password" id="newPagePassword" placeholder="Escribe la contraseña para esta sección..." 
+                   class="w-full px-3 py-1.5 text-xs rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-white font-medium">
+          </div>
         </div>
 
         <div class="space-y-1 pt-1">
@@ -206,7 +220,7 @@
         </div>
       </div>
 
-      <div class="flex-1 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/10 to-purple-50/20 border border-slate-200/80 p-3 sm:p-6 flex flex-col justify-between overflow-y-auto max-h-[650px] custom-scrollbar shadow-inner">
+      <div class="flex-1 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/10 to-purple-50/20 border border-slate-200/80 p-3 sm:p-6 flex flex-col justify-between overflow-y-auto max-h-[650px] custom-scrollbar shadow-inner relative">
         <div id="previewContainer" class="space-y-6 max-w-2xl mx-auto w-full my-auto"></div>
         <div class="text-center text-[10px] text-slate-400 border-t border-slate-200/50 pt-4 mt-8">
           &copy; 2026 by Jesús Flores
@@ -215,6 +229,31 @@
     </section>
   </main>
 
+  <!-- Modal para pedir Contraseña en Vista Previa -->
+  <div id="passwordModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-5 space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-indigo-600"></i> Sección Protegida
+        </h3>
+        <button type="button" onclick="closePasswordModal()" class="text-slate-400 hover:text-slate-600 text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600">Ingresa la contraseña para acceder a <span id="modalTargetPage" class="font-bold text-slate-900"></span>:</p>
+      <div>
+        <input type="password" id="modalPasswordInput" placeholder="••••••••" 
+               class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+               onkeypress="if(event.key === 'Enter') { submitPasswordModal(); }">
+        <p id="modalErrorMsg" class="hidden text-[10px] text-rose-500 font-semibold mt-1">Contraseña incorrecta. Inténtalo de nuevo.</p>
+      </div>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="closePasswordModal()" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+        <button type="button" onclick="submitPasswordModal()" class="px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-sm">Acceder</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2.5 z-50">
     <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
     <span id="toastMessage">Operación realizada</span>
@@ -222,15 +261,23 @@
 
   <script>
     let pagesData = {
-      "Documentos": [
-        { name: "Manual_Usuario.pdf", size: "2.1 MB", type: "pdf", description: "Guía de referencia rápida oficial." }
-      ],
-      "Software": [
-        { name: "Instalador_App.exe", size: "14.5 MB", type: "exe", description: "Ejecutable principal del sistema." }
-      ]
+      "Documentos": {
+        password: "",
+        items: [
+          { name: "Manual_Usuario.pdf", size: "2.1 MB", type: "pdf", description: "Guía de referencia rápida oficial." }
+        ]
+      },
+      "Software": {
+        password: "",
+        items: [
+          { name: "Instalador_App.exe", size: "14.5 MB", type: "exe", description: "Ejecutable principal del sistema." }
+        ]
+      }
     };
     let activePage = "Documentos";
     let previewActivePage = "home";
+    let unlockedPages = {}; // Registro local de páginas desbloqueadas en vista previa
+    let pendingAuthPage = null;
     let deferredPrompt = null;
 
     if ('serviceWorker' in navigator) {
@@ -305,9 +352,20 @@
       });
     }
 
+    function togglePagePasswordInput() {
+      const chk = document.getElementById('pageProtectCheckbox');
+      const container = document.getElementById('pagePasswordContainer');
+      if (chk && container) {
+        container.classList.toggle('hidden', !chk.checked);
+      }
+    }
+
     function addPage() {
       const input = document.getElementById('newPageInput');
+      const chk = document.getElementById('pageProtectCheckbox');
+      const pwdInput = document.getElementById('newPagePassword');
       if (!input) return;
+      
       const pageName = input.value.trim();
       if (!pageName) return;
 
@@ -316,13 +374,30 @@
         return;
       }
 
-      pagesData[pageName] = [];
+      let passVal = "";
+      if (chk && chk.checked) {
+        passVal = pwdInput ? pwdInput.value.trim() : "";
+        if (!passVal) {
+          alert("Por favor escribe una contraseña o desmarca la opción de contraseña.");
+          return;
+        }
+      }
+
+      pagesData[pageName] = {
+        password: passVal,
+        items: []
+      };
+
       activePage = pageName;
       input.value = '';
+      if (pwdInput) pwdInput.value = '';
+      if (chk) chk.checked = false;
+      togglePagePasswordInput();
+
       renderPagesTabs();
       renderFileList();
       updatePreview();
-      showToast('Página "' + pageName + '" creada');
+      showToast('Página "' + pageName + '" creada' + (passVal ? ' (protegida)' : ''));
     }
 
     function deletePage(pageName, event) {
@@ -333,6 +408,7 @@
       }
       if (confirm('¿Eliminar la página "' + pageName + '" y sus elementos?')) {
         delete pagesData[pageName];
+        delete unlockedPages[pageName];
         activePage = Object.keys(pagesData)[0];
         renderPagesTabs();
         renderFileList();
@@ -358,9 +434,12 @@
       let html = '';
       Object.keys(pagesData).forEach(pageName => {
         const isActive = pageName === activePage;
+        const isProtected = !!(pagesData[pageName] && pagesData[pageName].password);
         const activeClass = isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
         const escapedName = pageName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
         html += '<div onclick="switchPage(\'' + escapedName + '\')" class="cursor-pointer px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 border ' + activeClass + '">' +
+                (isProtected ? '<i class="fa-solid fa-lock text-[10px] opacity-80"></i>' : '') +
                 '<span>' + pageName + '</span>' +
                 '<span onclick="deletePage(\'' + escapedName + '\', event)" class="hover:text-rose-300 text-slate-400 ml-0.5"><i class="fa-solid fa-xmark text-[9px]"></i></span>' +
                 '</div>';
@@ -387,8 +466,10 @@
         url = 'https://' + url;
       }
 
-      if (!pagesData[activePage]) pagesData[activePage] = [];
-      pagesData[activePage].push({
+      if (!pagesData[activePage]) {
+        pagesData[activePage] = { password: "", items: [] };
+      }
+      pagesData[activePage].items.push({
         name: title,
         url: url,
         type: 'url',
@@ -406,10 +487,12 @@
 
     function handleFiles(files) {
       if (!files || files.length === 0) return;
-      if (!pagesData[activePage]) pagesData[activePage] = [];
+      if (!pagesData[activePage]) {
+        pagesData[activePage] = { password: "", items: [] };
+      }
       Array.from(files).forEach(file => {
         const ext = file.name.split('.').pop().toLowerCase();
-        pagesData[activePage].push({
+        pagesData[activePage].items.push({
           name: file.name,
           size: formatBytes(file.size),
           type: ext,
@@ -431,22 +514,24 @@
     }
 
     function removeItem(index) {
-      pagesData[activePage].splice(index, 1);
-      renderFileList();
-      updatePreview();
+      if (pagesData[activePage] && pagesData[activePage].items) {
+        pagesData[activePage].items.splice(index, 1);
+        renderFileList();
+        updatePreview();
+      }
     }
 
     function removeAllFilesActivePage() {
       if (confirm('¿Vaciar la sección "' + activePage + '"?')) {
-        pagesData[activePage] = [];
+        if (pagesData[activePage]) pagesData[activePage].items = [];
         renderFileList();
         updatePreview();
       }
     }
 
     function updateItemDescription(index, text) {
-      if (pagesData[activePage] && pagesData[activePage][index]) {
-        pagesData[activePage][index].description = text;
+      if (pagesData[activePage] && pagesData[activePage].items && pagesData[activePage].items[index]) {
+        pagesData[activePage].items[index].description = text;
         updatePreview();
       }
     }
@@ -483,7 +568,7 @@
       const countEl = document.getElementById('fileCount');
       const clearBtn = document.getElementById('clearBtn');
       if (!listEl) return;
-      const currentItems = pagesData[activePage] || [];
+      const currentItems = (pagesData[activePage] && pagesData[activePage].items) ? pagesData[activePage].items : [];
 
       if (countEl) countEl.textContent = currentItems.length;
       if (clearBtn) clearBtn.classList.toggle('hidden', currentItems.length === 0);
@@ -532,8 +617,52 @@
     }
 
     function previewNavigate(page) {
+      if (page !== 'home') {
+        const targetPage = pagesData[page];
+        if (targetPage && targetPage.password && !unlockedPages[page]) {
+          openPasswordModal(page);
+          return;
+        }
+      }
       previewActivePage = page;
       updatePreview();
+    }
+
+    function openPasswordModal(page) {
+      pendingAuthPage = page;
+      const targetSpan = document.getElementById('modalTargetPage');
+      const input = document.getElementById('modalPasswordInput');
+      const err = document.getElementById('modalErrorMsg');
+      if (targetSpan) targetSpan.textContent = '"' + page + '"';
+      if (input) input.value = '';
+      if (err) err.classList.add('hidden');
+      
+      const modal = document.getElementById('passwordModal');
+      if (modal) modal.classList.remove('hidden');
+      setTimeout(() => { if (input) input.focus(); }, 100);
+    }
+
+    function closePasswordModal() {
+      const modal = document.getElementById('passwordModal');
+      if (modal) modal.classList.add('hidden');
+      pendingAuthPage = null;
+    }
+
+    function submitPasswordModal() {
+      if (!pendingAuthPage) return;
+      const input = document.getElementById('modalPasswordInput');
+      const err = document.getElementById('modalErrorMsg');
+      const enteredPass = input ? input.value : '';
+      const realPass = pagesData[pendingAuthPage] ? pagesData[pendingAuthPage].password : '';
+
+      if (enteredPass === realPass) {
+        unlockedPages[pendingAuthPage] = true;
+        const target = pendingAuthPage;
+        closePasswordModal();
+        previewNavigate(target);
+      } else {
+        if (err) err.classList.remove('hidden');
+      }
     }
 
     function updatePreview() {
@@ -551,12 +680,18 @@
       if (previewActivePage === 'home') {
         let navButtonsHTML = '';
         pageNames.forEach(pName => {
-          const count = (pagesData[pName] || []).length;
+          const pObj = pagesData[pName] || { password: "", items: [] };
+          const count = pObj.items ? pObj.items.length : 0;
+          const isProtected = !!pObj.password;
           const escapedName = pName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          
           navButtonsHTML += '<div onclick="previewNavigate(\'' + escapedName + '\')" class="group bg-white/90 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between">' +
                             '<div class="flex items-center gap-3 min-w-0">' +
-                            '<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>' +
-                            '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">' + pName + '</h3>' +
+                            '<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition">' +
+                            (isProtected ? '<i class="fa-solid fa-lock text-amber-500"></i>' : '<i class="fa-solid fa-folder-open"></i>') +
+                            '</div>' +
+                            '<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate flex items-center gap-1.5">' + pName + 
+                            (isProtected ? ' <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">Protegida</span>' : '') + '</h3>' +
                             '<p class="text-[11px] text-slate-400">' + count + ' elementos disponibles</p></div></div>' +
                             '<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>';
         });
@@ -568,7 +703,7 @@
         return;
       }
 
-      const currentItems = pagesData[previewActivePage] || [];
+      const currentItems = (pagesData[previewActivePage] && pagesData[previewActivePage].items) ? pagesData[previewActivePage].items : [];
       let cardsHTML = '';
       currentItems.forEach(item => {
         if (item.type === 'url') {
@@ -629,13 +764,33 @@
              '<body class="bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 min-h-screen text-slate-800 flex flex-col justify-between">\n\n' +
              '  <script id="site-data" type="text/plain">' + encodedData + '<\/script>\n\n' +
              '  <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full space-y-8" id="appRoot"></div>\n\n' +
+             '  <!-- Modal Contraseña -->\n' +
+             '  <div id="exportModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">\n' +
+             '    <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-5 space-y-4 border border-slate-200">\n' +
+             '      <div class="flex items-center justify-between border-b border-slate-100 pb-2">\n' +
+             '        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-shield-halved text-indigo-600"></i> Sección Protegida</h3>\n' +
+             '        <button type="button" onclick="closeExportModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i></button>\n' +
+             '      </div>\n' +
+             '      <p class="text-xs text-slate-600">Ingresa la contraseña para acceder a <span id="exportModalTarget" class="font-bold text-slate-900"></span>:</p>\n' +
+             '      <div>\n' +
+             '        <input type="password" id="exportModalInput" placeholder="••••••••" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none" onkeypress="if(event.key === \'Enter\') { submitExportModal(); }">\n' +
+             '        <p id="exportModalError" class="hidden text-[10px] text-rose-500 font-semibold mt-1">Contraseña incorrecta. Inténtalo de nuevo.</p>\n' +
+             '      </div>\n' +
+             '      <div class="flex justify-end gap-2 pt-1">\n' +
+             '        <button type="button" onclick="closeExportModal()" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>\n' +
+             '        <button type="button" onclick="submitExportModal()" class="px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-sm">Acceder</button>\n' +
+             '      </div>\n' +
+             '    </div>\n' +
+             '  </div>\n\n' +
              '  <footer class="py-6 border-t border-slate-200/60 text-center text-xs text-slate-400 px-4">\n' +
              '    <p>&copy; 2026 by Jesús Flores</p>\n' +
              '  </footer>\n\n' +
              '  <script>\n' +
              '    const encoded = document.getElementById("site-data").textContent.trim();\n' +
              '    const data = JSON.parse(decodeURIComponent(escape(atob(encoded))));\n' +
-             '    let currentView = "home";\n\n' +
+             '    let currentView = "home";\n' +
+             '    let unlocked = {};\n' +
+             '    let pendingPage = null;\n\n' +
              '    function cleanFileName(filename) {\n' +
              '      const lastDot = filename.lastIndexOf(".");\n' +
              '      if (lastDot === -1 || lastDot === 0) return filename;\n' +
@@ -661,18 +816,52 @@
              '        default: return { icon: "fa-file", color: "text-slate-500", bg: "bg-slate-50 border-slate-200" };\n' +
              '      }\n' +
              '    }\n\n' +
+             '    function navigateTo(pName) {\n' +
+             '      const pObj = (data.pages || {})[pName];\n' +
+             '      if (pObj && pObj.password && !unlocked[pName]) {\n' +
+             '        pendingPage = pName;\n' +
+             '        document.getElementById("exportModalTarget").textContent = \'"\' + pName + \'"\';\n' +
+             '        document.getElementById("exportModalInput").value = "";\n' +
+             '        document.getElementById("exportModalError").classList.add("hidden");\n' +
+             '        document.getElementById("exportModal").classList.remove("hidden");\n' +
+             '        setTimeout(() => document.getElementById("exportModalInput").focus(), 100);\n' +
+             '        return;\n' +
+             '      }\n' +
+             '      currentView = pName;\n' +
+             '      render();\n' +
+             '    }\n\n' +
+             '    function closeExportModal() {\n' +
+             '      document.getElementById("exportModal").classList.add("hidden");\n' +
+             '      pendingPage = null;\n' +
+             '    }\n\n' +
+             '    function submitExportModal() {\n' +
+             '      if (!pendingPage) return;\n' +
+             '      const input = document.getElementById("exportModalInput").value;\n' +
+             '      const realPass = (data.pages[pendingPage] || {}).password || "";\n' +
+             '      if (input === realPass) {\n' +
+             '        unlocked[pendingPage] = true;\n' +
+             '        const target = pendingPage;\n' +
+             '        closeExportModal();\n' +
+             '        currentView = target;\n' +
+             '        render();\n' +
+             '      } else {\n' +
+             '        document.getElementById("exportModalError").classList.remove("hidden");\n' +
+             '      }\n' +
+             '    }\n\n' +
              '    function render() {\n' +
              '      const root = document.getElementById("appRoot");\n' +
              '      const pageNames = Object.keys(data.pages || {});\n\n' +
              '      if (currentView === "home") {\n' +
              '        let buttonsHTML = "";\n' +
              '        pageNames.forEach(pName => {\n' +
-             '          const count = (data.pages[pName] || []).length;\n' +
+             '          const pObj = data.pages[pName] || { items: [] };\n' +
+             '          const count = (pObj.items || []).length;\n' +
+             '          const isProtected = !!pObj.password;\n' +
              '          const esc = pName.replace(/\'/g, "\\\\\'").replace(/"/g, "&quot;");\n' +
-             '          buttonsHTML += \'<div onclick="currentView=\\\'\'+esc+\'\\\'; render();" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
+             '          buttonsHTML += \'<div onclick="navigateTo(\\\'\'+esc+\'\\\')" class="group bg-white/80 hover:bg-white border border-slate-200/80 hover:border-indigo-400 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition duration-300 cursor-pointer flex items-center justify-between backdrop-blur-md">\' +\n' +
              '                         \'<div class="flex items-center gap-3 min-w-0">\' +\n' +
-             '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition"><i class="fa-solid fa-folder-open"></i></div>\' +\n' +
-             '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate">\' + pName + \'</h3>\' +\n' +
+             '                         \'<div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-base shadow-inner shrink-0 group-hover:scale-105 transition">\' + (isProtected ? \'<i class="fa-solid fa-lock text-amber-500"></i>\' : \'<i class="fa-solid fa-folder-open"></i>\') + \'</div>\' +\n' +
+             '                         \'<div class="truncate"><h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-indigo-600 transition truncate flex items-center gap-1.5">\' + pName + (isProtected ? \' <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">Protegida</span>\' : \'\') + \'</h3>\' +\n' +
              '                         \'<p class="text-[11px] text-slate-400">\' + count + \' elementos disponibles</p></div></div>\' +\n' +
              '                         \'<i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition shrink-0 ml-2"></i></div>\';\n' +
              '        });\n\n' +
@@ -681,7 +870,8 @@
              '                         \'<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center pt-2">Secciones Disponibles:</div>\' +\n' +
              '                         \'<div class="grid grid-cols-1 gap-3 max-w-md mx-auto w-full px-2">\' + (buttonsHTML || \'<p class="text-center text-xs text-slate-400">No hay secciones creadas.</p>\') + \'</div>\';\n' +
              '      } else {\n' +
-             '        const items = data.pages[currentView] || [];\n' +
+             '        const pageObj = data.pages[currentView] || { items: [] };\n' +
+             '        const items = pageObj.items || [];\n' +
              '        let cardsHTML = "";\n' +
              '        items.forEach(item => {\n' +
              '          if (item.type === "url") {\n' +
@@ -763,7 +953,7 @@
       const descInput = document.getElementById('siteDescription');
 
       const projectData = {
-        version: "3.1",
+        version: "3.2",
         date: new Date().toISOString(),
         siteTitle: titleInput ? titleInput.value : '',
         showDescription: toggleDesc ? toggleDesc.checked : true,
@@ -780,7 +970,7 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('¡Proyecto guardado!');
+      showToast('¡Proyecto guardado con contraseñas!');
     }
 
     function importProject(event) {
@@ -801,9 +991,19 @@
           }
           if (data.siteDescription && descInput) descInput.value = data.siteDescription;
           if (data.pages) {
-            pagesData = data.pages;
+            // Normalizar estructura si viene del formato anterior sin password
+            const parsedPages = {};
+            Object.keys(data.pages).forEach(pName => {
+              if (Array.isArray(data.pages[pName])) {
+                parsedPages[pName] = { password: "", items: data.pages[pName] };
+              } else {
+                parsedPages[pName] = data.pages[pName];
+              }
+            });
+            pagesData = parsedPages;
             activePage = Object.keys(pagesData)[0] || 'Inicio';
           }
+          unlockedPages = {};
           renderPagesTabs();
           renderFileList();
           updatePreview();
